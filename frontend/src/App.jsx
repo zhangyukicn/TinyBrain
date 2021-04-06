@@ -4,15 +4,18 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Redirect
+    Redirect,
+    Link
 } from 'react-router-dom';
 import TokenContext from './TokenContext';
+import Welcome from './pages/welcome';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import Dashboard from './pages/dashboard';
 
 // yarn add @material-ui/icons
-
+// yarn add @material-ui/core
+// yarn add react-router-dom
 // 页面2： log in
 // 页面3： sign up
 // 页面4： dashboard
@@ -25,21 +28,16 @@ import Dashboard from './pages/dashboard';
 // 页面10： join game
 // 页面11： myresult
 
-/*
-<Router>
-      <TokenContext.Provider value={{ token, setToken }}>
-        {token ? null : <Redirect to='./login'/>}
-        <Switch>
-          <Route path="./login">
-            <Login setToken={setToken} token={token} />
-          </Route>
-          <Route path="./signup">
-            <Signup setToken={setToken} token={token} />
-          </Route>
-        </Switch>
-      </TokenContext.Provider>
-    </Router>
-*/
+/* <TokenContext.Provider value={{ token, setToken }}>
+            <Router>
+            {token ? null : <Redirect to='./login'/>}
+            <Switch>
+                <Route path="./login" component={Login} setToken={setToken} token={token} />
+                <Route path="./signup" component={Signup} setToken={setToken} token={token} />
+                <Route path="./dashboard" component={Dashboard} setToken={setToken} token={token} />
+            </Switch>
+            </Router>
+        </TokenContext.Provider> */
 
 function App () {
     const tokenStored = localStorage.getItem('token');
@@ -50,22 +48,19 @@ function App () {
         localStorage.setItem('token', token);
     }, [token]); // change when token changed
 
-    if (tokenStored) {
-        return (
+    return (
+        <Router>
+            {/* A <Switch> looks through its children <Route>s and
+                renders the first one that matches the current URL. */}
             <Switch>
-                <Route path="./login">
-                    <Login setToken={setToken} token={token} />
-                </Route>
-                <Route path="./signup">
-                    <Signup setToken={setToken} token={token} />
-                </Route>
+            {/*必须用exact path 否则匹配到/就不往下匹配了*/}
+            <Route exact path="/" component={Welcome} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/dashboard" component={Dashboard} />
             </Switch>
-        );
-    } else {
-        return (
-            <Login path="./login" setToken={setToken} token={token} />
-        );
-    }
+        </Router>
+    );
 }
 
 export default App;
