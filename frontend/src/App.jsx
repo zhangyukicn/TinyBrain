@@ -47,18 +47,22 @@ function App () {
     React.useEffect(() => {
         localStorage.setItem('token', token);
     }, [token]); // change when token changed
-
+    console.log(token);
     return (
         <Router>
             {/* A <Switch> looks through its children <Route>s and
                 renders the first one that matches the current URL. */}
-            <Switch>
-            {/*必须用exact path 否则匹配到/就不往下匹配了*/}
-            <Route exact path="/" component={Welcome} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/signup" component={Signup} />
-            <Route exact path="/dashboard" component={Dashboard} />
-            </Switch>
+            <TokenContext.Provider value={{ token, setToken }}>
+                {/* 检查有否token，没有就进欢迎页面 */}
+                {token ? null : <Redirect to='/'/>}
+                <Switch>
+                {/* 必须用exact path 否则匹配到/就不往下匹配了 */}
+                <Route exact path="/" component={Welcome} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/signup" component={Signup} />
+                <Route exact path="/dashboard" component={Dashboard} />
+                </Switch>
+            </TokenContext.Provider>
         </Router>
     );
 }

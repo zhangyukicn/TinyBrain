@@ -1,7 +1,8 @@
 import React from 'react';
+import Navbar from '../components/navbar';
 
-export default function Dashboard () {
+export default function dashboard () {
     return (
-        <h2>Hello Dashboard</h2>
+        <Navbar />
     );
 }

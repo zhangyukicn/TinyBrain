@@ -1,4 +1,4 @@
-import React from 'react';
+import { React } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,116 +13,178 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from '../components/copyRight';
+import * as CONFIG from '../config.json';
+import { useHistory, Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(3),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
 }));
 
 export default function SignUp () {
-  const classes = useStyles();
+    const classes = useStyles();
+    const history = useHistory();
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-        <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
+    const checkName = () => {
+        const nameField = document.getElementById('signup_name');
+        if (nameField.value === '') {
+            nameField.style.backgroundColor = 'rgba(120, 100, 240, 0.6)';
+            return false;
+        } else {
+            nameField.style.backgroundColor = '';
+            return true;
+        }
+    }
+
+    const checkEmail = () => {
+        const emailField = document.getElementById('signup_email');
+        const patt = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/;
+        if (!patt.test(emailField.value)) {
+            emailField.style.backgroundColor = 'rgba(120, 100, 240, 0.6)';
+            return false;
+        } else {
+            emailField.style.backgroundColor = '';
+            return true;
+        }
+    }
+
+    const checkPassword = () => {
+        const passwordField = document.getElementById('signup_password');
+        if (passwordField.value === '') {
+            passwordField.style.backgroundColor = 'rgba(120, 100, 240, 0.6)';
+            return false;
+        } else {
+            passwordField.style.backgroundColor = '';
+            return true;
+        }
+    }
+
+    const submitSignUp = (event) => {
+        event.preventDefault();
+        const nameVal = document.getElementById('signup_name').value;
+        const emailVal = document.getElementById('signup_email').value;
+        const passwordVal = document.getElementById('signup_password').value;
+        if (!checkName() || !checkEmail() || !checkPassword()) {
+            alert('Required information not complete.');
+            return false;
+        }
+        const para = {
+            method: 'POST',
+            body: JSON.stringify({
+                email: emailVal,
+                password: passwordVal,
+                name: nameVal,
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        };
+
+        fetch(`http://localhost:${CONFIG.BACKEND_PORT}/admin/auth/register`, para).then(res => {
+            if (res.status === 200) {
+                res.json().then(res => {
+                // save token here
+                localStorage.setItem('token', res.token);
+                // console.log(token);
+                history.push('./dashBoard');
+                alert('sign up successful!');
+                })
+            } else {
+                res.json().then(res => {
+                console.log(res.error);
+                alert(res.error);
+                return false;
+                })
+            }
+        })
+    }
+
+    return (
+        <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+            Sign up
+            </Typography>
+            <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={12}>
+                <TextField
+                    onChange={checkName}
+                    autoComplete="fname"
+                    name="firstName"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="signup_name"
+                    label="Name"
+                    autoFocus
+                />
+                </Grid>
+                <Grid item xs={12}>
+                <TextField
+                    onChange={checkEmail}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="signup_email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                />
+                </Grid>
+                <Grid item xs={12}>
+                <TextField
+                    onChange={checkPassword}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="signup_password"
+                    autoComplete="current-password"
+                />
+                </Grid>
+            </Grid>
+            <Button
+                onClick={submitSignUp}
+                type="submit"
                 fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+            >
+                Sign Up
+            </Button>
+            <Grid container justify="flex-end">
+                <Grid item>
+                <Link href="./login" variant="body2">
+                    Already have an account? Log in
+                </Link>
+                </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
-  );
+            </form>
+        </div>
+        <Box mt={5}>
+            <Copyright />
+        </Box>
+        </Container>
+    );
 }

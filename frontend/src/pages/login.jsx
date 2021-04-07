@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { React, useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,10 +12,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import * as CONFIG from '../config.json';
 import { useHistory, Redirect } from 'react-router-dom';
 import Copyright from '../components/copyRight';
 import TokenContext from '../TokenContext';
+import * as CONFIG from '../config.json';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -43,68 +43,66 @@ function LogIn () {
     const history = useHistory();
 
     // validate email
-    const checkEmail = (emailVal) => {
+    const checkEmail = () => {
         const patt = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/;
-        if (!patt.test(emailVal)) {
-            document.getElementById('email').style.backgroundColor = 'rgb(200,100,100)';
+        const emailField = document.getElementById('login_email');
+        if (!patt.test(emailField.value)) {
+            emailField.style.backgroundColor = 'rgba(120, 100, 240, 0.6)';
             return false;
         } else {
-        document.getElementById('email').style.backgroundColor = '';
+            emailField.style.backgroundColor = '';
             return true;
         }
     }
 
     // validate password
-    const checkPassword = (passwordVal) => {
-        if (passwordVal === '') {
-            document.getElementById('password').style.backgroundColor = 'rgb(200,100,100)';
+    const checkPassword = () => {
+        const passwordField = document.getElementById('login_password');
+        if (passwordField.value === '') {
+            passwordField.style.backgroundColor = 'rgba(120, 100, 240, 0.6)';
             return false;
         } else {
-            document.getElementById('password').style.backgroundColor = '';
+            passwordField.style.backgroundColor = '';
             return true;
         }
     }
 
-    const goToSignUp = () => {
-        return <Redirect to="/dashboard" />;
-    }
-
     const submitLogIn = (event) => {
         event.preventDefault(); // 先莫动
-        const emailVal = document.getElementById('email').value;
-        const passwordVal = document.getElementById('password').value;
+        const emailVal = document.getElementById('login_email').value;
+        const passwordVal = document.getElementById('login_password').value;
         if (!checkEmail(emailVal) || !checkPassword(passwordVal)) {
-        alert('please double check your input');
-        return false;
-    }
-
-    const para = {
-        method: 'POST',
-        body: JSON.stringify({
-            email: emailVal,
-            password: passwordVal
-        }),
-        headers: {
-            'Content-Type': 'application/json'
-        },
-    };
-
-    fetch(`http://localhost:${CONFIG.BACKEND_PORT}/admin/auth/login`, para).then(res => {
-        if (res.status === 200) {
-            res.json().then(res => {
-            // save token here
-            localStorage.setItem('token', res.token);
-            // console.log(token);
-            // history.push('../dashBoard');
-            alert('login!!');
-            })
-        } else {
-            res.json().then(res => {
-            console.log(res.error);
-            alert(res.error);
+            alert('please double check your input');
             return false;
-            })
         }
+
+        const para = {
+            method: 'POST',
+            body: JSON.stringify({
+                email: emailVal,
+                password: passwordVal
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        };
+
+        fetch(`http://localhost:${CONFIG.BACKEND_PORT}/admin/auth/login`, para).then(res => {
+            if (res.status === 200) {
+                res.json().then(res => {
+                // save token here
+                localStorage.setItem('token', res.token);
+                console.log(localStorage.getItem('token'));
+                history.push('./dashBoard');
+                // alert('login!!');
+                })
+            } else {
+                res.json().then(res => {
+                    console.log(res.error);
+                    alert(res.error);
+                    return false;
+                })
+            }
         })
     }
 
@@ -116,15 +114,16 @@ function LogIn () {
             <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-            Sign in
+            Log In
             </Typography>
             <form className={classes.form} noValidate>
             <TextField
+                onChange={checkEmail}
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="login_email"
                 label="Email Address"
                 name="email"
                 autoComplete="email"
@@ -138,7 +137,7 @@ function LogIn () {
                 name="password"
                 label="Password"
                 type="password"
-                id="password"
+                id="login_password"
                 autoComplete="current-password"
             />
             <FormControlLabel
@@ -153,11 +152,16 @@ function LogIn () {
                 color="primary"
                 className={classes.submit}
             >
-                Sign In
+                Log In
             </Button>
             <Grid container>
+                <Grid item xs>
+                <Link href="./" variant="body2">
+                    Back
+                </Link>
+                </Grid>
                 <Grid item>
-                <Link href="#" variant="body2" onClick={goToSignUp}>
+                <Link href="./signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                 </Link>
                 </Grid>
