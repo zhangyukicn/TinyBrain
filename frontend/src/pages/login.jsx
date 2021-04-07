@@ -106,6 +106,16 @@ function LogIn () {
         })
     }
 
+    const goBack = (event) => {
+        event.preventDefault(); // 先莫动
+        history.push('./');
+    }
+
+    const toSignUp = (event) => {
+        event.preventDefault(); // 先莫动
+        history.push('./signup');
+    }
+
     return (
         <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -156,12 +166,12 @@ function LogIn () {
             </Button>
             <Grid container>
                 <Grid item xs>
-                <Link href="./" variant="body2">
+                <Link variant="body2" onClick={goBack}>
                     Back
                 </Link>
                 </Grid>
                 <Grid item>
-                <Link href="./signup" variant="body2">
+                <Link variant="body2" onClick={toSignUp}>
                     {"Don't have an account? Sign Up"}
                 </Link>
                 </Grid>

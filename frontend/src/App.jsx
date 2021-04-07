@@ -12,12 +12,11 @@ import Welcome from './pages/welcome';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import Dashboard from './pages/dashboard';
-
+import Library from './pages/library';
 // yarn add @material-ui/icons
 // yarn add @material-ui/core
 // yarn add react-router-dom
-// 页面2： log in
-// 页面3： sign up
+
 // 页面4： dashboard
 // 页面5： library
 // 页面6： view game
@@ -61,6 +60,7 @@ function App () {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/dashboard" component={Dashboard} />
+                <Route exact path="/library" component={Library} />
                 </Switch>
             </TokenContext.Provider>
         </Router>

@@ -112,6 +112,11 @@ export default function SignUp () {
         })
     }
 
+    const toLogIn = (event) => {
+        event.preventDefault(); // 先莫动
+        history.push('./login');
+    }
+
     return (
         <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -175,7 +180,7 @@ export default function SignUp () {
             </Button>
             <Grid container justify="flex-end">
                 <Grid item>
-                <Link href="./login" variant="body2">
+                <Link variant="body2" onClick={toLogIn}>
                     Already have an account? Log in
                 </Link>
                 </Grid>
