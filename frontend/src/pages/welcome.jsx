@@ -41,7 +41,7 @@ function welcome () {
     }
 
     const goToPlay = () => {
-        history.push('../dashboard');
+        history.push('../playerdashboard');
     }
 
     return (

@@ -13,6 +13,9 @@ import Login from './pages/login';
 import Signup from './pages/signup';
 import Dashboard from './pages/dashboard';
 import Library from './pages/library';
+import PlayerDashboard from './pages/playerdashboard';
+import Lobby from './pages/lobby';
+
 // yarn add @material-ui/icons
 // yarn add @material-ui/core
 // yarn add react-router-dom
@@ -61,6 +64,8 @@ function App () {
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/dashboard" component={Dashboard} />
                 <Route exact path="/library" component={Library} />
+                <Route exact path="/playerdashboard" component={PlayerDashboard} />
+                {/* <Route exact path="/lobby" component={Lobby} /> */}
                 </Switch>
             </TokenContext.Provider>
         </Router>
