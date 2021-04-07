@@ -24,6 +24,10 @@
         "linebreak-style": 0,
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "semi": 0,
-        "comma-dangle": 0
+        "comma-dangle": 0,
+        "no-unused-vars": "off",
+        "indent": 0,
+        "skipBlankLines": 0,
+        "ignoreComments": 0
     }
 }
