@@ -27,7 +27,7 @@
         "comma-dangle": 0,
         "no-unused-vars": "off",
         "indent": 0,
-        "skipBlankLines": 0,
-        "ignoreComments": 0
+        "skipBlankLines": "off",
+        "ignoreComments": "off"
     }
 }

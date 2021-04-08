@@ -44,8 +44,6 @@ export default function ButtonAppBar () {
                 TinyBrain
             </Typography>
             <Button color="inherit" onClick={() => history.push('./dashboard')}>Home</Button>
-            <Button color="inherit" onClick={() => history.push('./library')}>Library</Button>
-            <Button color="inherit" onClick={() => history.push('./create')}>Create</Button>
             <Button color="inherit" onClick={navLogOut}>LogOut</Button>
             </Toolbar>
         </AppBar>

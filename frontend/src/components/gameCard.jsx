@@ -1,5 +1,6 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
 import Card from '@material-ui/core/Card';
@@ -13,8 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-import Copyright from '../components/copyRight';
-import Navbar from '../components/navbar';
+import { getQuizQuestions, deleteQuiz } from '../api';
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -48,31 +48,75 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Gamecard (card) {
+export default function Gamecard (quiz) {
     const classes = useStyles();
+    const token = localStorage.getItem('token');
+    const [questions, setQuestions] = React.useState();
+
+    const fetchQuestions = () => {
+        getQuizQuestions(token, quiz.quiz.id).then(data => {
+            setQuestions(Object.values(data));
+        });
+    }
+    React.useEffect(() => { fetchQuestions(); }, [token]);
+
+    const getTotalTime = () => {
+        if (!questions) return 0;
+        let res = 0;
+        for (let i = 0; i < questions.length; ++i) {
+            res += questions[i].time;
+        }
+        return res;
+    }
+    const deleteButton = () => {
+        deleteQuiz(token, quiz.quiz.id);
+    }
+    /*
+    title
+    number of questions
+    a thumbnail
+    a total time to complete
+    Edit button
+    create, 点击加空卡片
+    delete button
+    */
+
     return (
-        <Grid item key={card} xs={12} sm={6} md={4}>
-            <Card className={classes.card}>
+        <Grid item quiz={quiz} xs={12} sm={6} md={4}>
+            <Card className={classes.quiz}>
             <CardMedia
                 className={classes.cardMedia}
-                image="https://source.unsplash.com/random"
-                title="Image title"
+                image={quiz.quiz.thumbnail ? quiz.quiz.thumbnail : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi8v42_qIIylFc_HQITxDN8AQAHnoFvxKnqg&usqp=CAU'}
+                title={quiz.quiz.name}
             />
             <CardContent className={classes.cardContent}>
                 <Typography gutterBottom variant="h5" component="h2">
-                Heading
+                {quiz.quiz.name ? quiz.quiz.name : 'Empty title'}
                 </Typography>
                 <Typography>
-                This is a media card. You can use this section to describe the content.
+                { `Number of questions: ${questions ? questions.length : 0}` }
+                </Typography>
+                <Typography>
+                { `Total time: ${getTotalTime()}` }
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" color="primary">
-                View
-                </Button>
-                <Button size="small" color="primary">
-                Edit
-                </Button>
+                <Grid container spacing={10} justify="center" alignContent="center" >
+                    <Box m={5}>
+                    <Button size="small" color="primary" variant="contained" p={2}>
+                    Play
+                    </Button>
+                    <Button size="small" color="primary" p={2}>
+                    Edit
+                    </Button>
+                    <Button size="small" color="primary" p={2} onClick={deleteButton}>
+                    Delete
+                    </Button>
+                    <Button size="small" color="primary" p={2}>
+                    History
+                    </Button>
+                    </Box>
+                </Grid>
             </CardActions>
             </Card>
         </Grid>

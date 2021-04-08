@@ -12,7 +12,6 @@ import Welcome from './pages/welcome';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import Dashboard from './pages/dashboard';
-import Library from './pages/library';
 import PlayerDashboard from './pages/playerdashboard';
 import Lobby from './pages/lobby';
 
@@ -56,14 +55,13 @@ function App () {
                 renders the first one that matches the current URL. */}
             <TokenContext.Provider value={{ token, setToken }}>
                 {/* 检查有否token，没有就进欢迎页面 */}
-                {token ? null : <Redirect to='/'/>}
+                {token ? <Redirect to='/dashboard'/> : <Redirect to='/'/>}
                 <Switch>
                 {/* 必须用exact path 否则匹配到/就不往下匹配了 */}
                 <Route exact path="/" component={Welcome} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/dashboard" component={Dashboard} />
-                <Route exact path="/library" component={Library} />
                 <Route exact path="/playerdashboard" component={PlayerDashboard} />
                 {/* <Route exact path="/lobby" component={Lobby} /> */}
                 </Switch>

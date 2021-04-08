@@ -42,7 +42,7 @@ function Playerdispay () {
 
     const checkgamepin = (Gamepin) => {
         if (Gamepin.length === 6) {
-                return true;
+            return true;
         } else {
             alert('Wrong length!!');
         }
