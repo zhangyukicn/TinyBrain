@@ -14,6 +14,7 @@ import Signup from './pages/signup';
 import Dashboard from './pages/dashboard';
 import PlayerDashboard from './pages/playerdashboard';
 import Lobby from './pages/lobby';
+import Edit from './pages/editQuiz';
 
 // yarn add @material-ui/icons
 // yarn add @material-ui/core
@@ -63,6 +64,7 @@ function App () {
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/dashboard" component={Dashboard} />
                 <Route exact path="/playerdashboard" component={PlayerDashboard} />
+                <Route exact path="/edit/:gameId" component={Edit} />
                 {/* <Route exact path="/lobby" component={Lobby} /> */}
                 </Switch>
             </TokenContext.Provider>

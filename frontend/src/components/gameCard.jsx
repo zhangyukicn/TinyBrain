@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { getQuizQuestions, deleteQuiz } from '../api';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -50,6 +51,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Gamecard (quiz) {
     const classes = useStyles();
+    const history = useHistory();
+
     const token = localStorage.getItem('token');
     const [questions, setQuestions] = React.useState();
 
@@ -58,7 +61,9 @@ export default function Gamecard (quiz) {
             setQuestions(Object.values(data));
         });
     }
+
     React.useEffect(() => { fetchQuestions(); }, [token]);
+    // React.useEffect(() => { window.location.reload(); }, [questions ? questions.length : null]);
 
     const getTotalTime = () => {
         if (!questions) return 0;
@@ -70,6 +75,12 @@ export default function Gamecard (quiz) {
     }
     const deleteButton = () => {
         deleteQuiz(token, quiz.quiz.id);
+        window.location.reload();
+    }
+
+    const goToEdit = () => {
+        localStorage.setItem('quiz_id', quiz.quiz.id);
+        history.push(`./edit/${quiz.quiz.id}`);
     }
     /*
     title
@@ -106,7 +117,7 @@ export default function Gamecard (quiz) {
                     <Button size="small" color="primary" variant="contained" p={2}>
                     Play
                     </Button>
-                    <Button size="small" color="primary" p={2}>
+                    <Button size="small" color="primary" p={2} onClick={goToEdit}>
                     Edit
                     </Button>
                     <Button size="small" color="primary" p={2} onClick={deleteButton}>

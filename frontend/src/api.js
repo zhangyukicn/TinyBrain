@@ -83,6 +83,24 @@ export const getQuizQuestions = async (token, id) => {
     }
 }
 
+export const getQuizInfo = async (token, id) => {
+    const res = await fetch(`${port}/admin/quiz/${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    const data = await res.json();
+    if (res.status === 200) {
+        return data;
+    } else {
+        console.log(res);
+        alert('Failed');
+        // throw new Error('Log out failed');
+    }
+}
+
 export const deleteQuiz = async (token, id) => {
     const res = await fetch(`${port}/admin/quiz/${id}`, {
         method: 'DELETE',
@@ -93,7 +111,28 @@ export const deleteQuiz = async (token, id) => {
     });
     const data = await res.json();
     if (res.status === 200) {
-        alert('Delete successful');
+        // alert('Delete successful');
+        return data;
+    } else {
+        console.log(res);
+        alert('Failed');
+        // throw new Error('Log out failed');
+    }
+}
+
+export const putQuiz = async (token, id, info) => {
+    const res = await fetch(`${port}/admin/quiz/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: info
+    });
+    console.log(info);
+    const data = await res.json();
+    if (res.status === 200) {
+        alert('Change successful');
         return data;
     } else {
         console.log(res);
