@@ -39,6 +39,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Playerdispay () {
     const classes = useStyles();
+    const history = useHistory();
+
+    const toLogin = (event) => {
+        event.preventDefault(); // 先莫动
+        history.push('./login');
+    }
 
     const checkgamepin = (Gamepin) => {
         if (Gamepin.length === 6) {
@@ -48,10 +54,17 @@ function Playerdispay () {
         }
     }
 
+    async function PlayerFetchSession (sessionid) {
+        const r = await fetch('/play/join/{sessionid}')
+    }
+
     const Gobutton = (event) => {
         event.preventDefault();
         const Gamepin = document.getElementById('gamepin').value;
         const Name = document.getElementById('NAME').value;
+        const para = {
+            name: Name
+        }
         if (checkgamepin(Gamepin) === true) {
             alert('yes');
         }
@@ -108,7 +121,7 @@ function Playerdispay () {
                 </Link>
                 </Grid>
                 <Grid item>
-                <Link href="./login" variant="body2">
+                <Link variant="body2" onClick={toLogin}>
                     {'You wanna create a game? Login'}
                 </Link>
                 </Grid>
