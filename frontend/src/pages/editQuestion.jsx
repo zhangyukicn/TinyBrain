@@ -16,15 +16,11 @@ import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from '@material-ui/core/Button';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import QuizCard from '../components/quizCardInEdit';
+import QuestionPanel from '../components/questionPanel';
 import HistoryRecords from '../components/history';
 import Copyright from '../components/copyRight';
-import EditImg from '../components/EditImg';
+import EditImg from '../components/questionImg';
 import SlideBarBtn from '../components/slideBarBtn'
 import { useHistory } from 'react-router-dom';
 import { LogOut, getQuizInfo, putQuiz } from '../api';
@@ -109,12 +105,33 @@ const useStyles = makeStyles((theme) => ({
         height: 240,
     },
 }));
-
+/*
+{
+    "id": 1,
+    "type": "m",
+    "content": "are you shabi?",
+    "point": 10,
+    "img": null,
+    "options": [
+    {
+        "id": 1,
+        "content": "Yes"
+    },
+    {
+        "id": 2,
+        "content": "No, you are"
+    }
+    ],
+    "ans": 1,
+    "time": 10
+}
+*/
 export default function Editboard () {
     const classes = useStyles();
     const history = useHistory();
     const token = localStorage.getItem('token');
     const quizId = localStorage.getItem('quiz_id');
+    const questionId = localStorage.getItem('questionId');
     const [quizInfo, setQuizInfo] = React.useState(0);
 
     const fetchInfo = () => {
@@ -150,7 +167,7 @@ export default function Editboard () {
         });
         const quizJSONString = JSON.stringify(tmpInfo);
         putQuiz(token, quizId, quizJSONString).then((data) => {
-            history.push(`/edit/${quizId}`);
+            history.push(`/edit/${quizId}/${questionId}`);
             alert('add question!');
         })
     }
@@ -226,7 +243,7 @@ export default function Editboard () {
                     {/* Recent Deposits */}
                     <Grid item xs={12} md={6} lg={12}>
                     <Paper className={fixedHeightPaper}>
-                        <QuizCard info={quizInfo}/>
+                        <QuestionPanel info={quizInfo}/>
                     </Paper>
                     </Grid>
                     {/* Recent Orders */}

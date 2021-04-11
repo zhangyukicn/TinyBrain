@@ -132,7 +132,6 @@ export const putQuiz = async (token, id, info) => {
     console.log(info);
     const data = await res.json();
     if (res.status === 200) {
-        alert('Change successful');
         return data;
     } else {
         console.log(res);

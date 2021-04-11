@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Title from './titles';
 import { putQuiz } from '../api';
+import { useHistory } from 'react-router-dom';
+
 const useStyles = makeStyles({
     dateTag: {
         flex: 5,
@@ -21,9 +23,10 @@ const useStyles = makeStyles({
 
 export default function QuizCardInEdit (quizInfo) {
     const classes = useStyles();
+    const history = useHistory();
     const id = localStorage.getItem('quiz_id');
     const token = localStorage.getItem('token');
-    console.log(quizInfo);
+    // console.log(quizInfo);
     const changeName = () => {
         const newName = document.getElementById('name_change').value;
         if (newName === '') {
@@ -33,9 +36,9 @@ export default function QuizCardInEdit (quizInfo) {
         // 更新quiz时，要把整个quiz info stringfy 之后再传回去，api接受的就是个string
         quizInfo.info.name = newName;
         const quizJSONString = JSON.stringify(quizInfo.info);
-        console.log(quizJSONString);
+        // console.log(quizJSONString);
         putQuiz(token, id, quizJSONString).then((data) => {
-            alert('hahah');
+            history.push(`./${id}`);
         })
     }
     return (

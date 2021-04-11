@@ -38,7 +38,9 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
     },
     cardMedia: {
-        paddingTop: '56.25%', // 16:9
+        height: 200,
+        width: 200,
+        margin: 'auto',
     },
     cardContent: {
         flexGrow: 1,
@@ -122,9 +124,6 @@ export default function Gamecard (quiz) {
                     </Button>
                     <Button size="small" color="primary" p={2} onClick={deleteButton}>
                     Delete
-                    </Button>
-                    <Button size="small" color="primary" p={2}>
-                    History
                     </Button>
                     </Box>
                 </Grid>
