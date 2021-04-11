@@ -18,23 +18,32 @@ export default function slideBarBtn (info) {
         const quizJSONString = JSON.stringify(info.info);
         // console.log(quizJSONString);
         putQuiz(token, quizId, quizJSONString).then((data) => {
-            history.push(`./${quizId}`);
+            history.push(`/edit/${quizId}`);
             alert('delete!');
         })
     }
 
     const goToQuestion = () => {
-        history.push(`/edit/${quizId}/${info.info.questions[info.index].id}`);
-        localStorage.setItem('questionId', info.info.questions[info.index].id);
-        localStorage.setItem('questionIndex', info.index);
+        if (info.info.questions.length > 0) {
+            history.push(`/edit/${quizId}/${info.info.questions[info.index].id}`);
+            localStorage.setItem('questionId', info.info.questions[info.index].id);
+            localStorage.setItem('questionIndex', info.index);
+        } else {
+            history.push(`/edit/${quizId}`);
+            localStorage.setItem('questionIndex', info.index);
+        }
     }
 
     return (
-        <ListItem button onClick={goToQuestion}>
+        <ListItem>
             <ListItemIcon>
                 <AssignmentIcon />
             </ListItemIcon>
-            <ListItemText primary={`Question ${info.index + 1}`} />
+            <Button
+                onClick={goToQuestion}
+            >
+                {`Question ${info.index + 1}`}
+            </Button>
             <Button
                 size="small"
                 color="primary"

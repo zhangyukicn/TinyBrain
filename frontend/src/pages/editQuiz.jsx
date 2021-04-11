@@ -138,16 +138,28 @@ export default function Editboard () {
     const addQuestion = () => {
         // 更新quiz时，要把整个quiz info stringfy 之后再传回去，api接受的就是个string
         const tmpInfo = quizInfo;
-        tmpInfo.questions.push({
-            id: tmpInfo.questions.length,
-            type: null,
-            content: null,
-            point: 0,
-            img: null,
-            options: [],
-            ans: null,
-            time: 0
-        });
+        const len = tmpInfo.questions.length;
+        if (len > 0) {
+            tmpInfo.questions.push({
+                id: tmpInfo.questions[len - 1].id + 1,
+                content: null,
+                point: 0,
+                img: null,
+                options: [],
+                ans: null,
+                time: 0
+            });
+        } else {
+            tmpInfo.questions.push({
+                id: 1,
+                content: null,
+                point: 0,
+                img: null,
+                options: [],
+                ans: null,
+                time: 0
+            });
+        }
         const quizJSONString = JSON.stringify(tmpInfo);
         putQuiz(token, quizId, quizJSONString).then((data) => {
             history.push(`/edit/${quizId}`);

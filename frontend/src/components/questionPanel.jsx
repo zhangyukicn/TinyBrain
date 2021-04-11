@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { putQuiz } from '../api';
 import { useHistory } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
+import Title from './titles';
 
 const useStyles = makeStyles((theme) => ({
     dateTag: {
@@ -65,34 +66,50 @@ export default function QuizCardInEdit (quizInfo) {
     console.log(quizInfo);
     const updateQuestion = () => {
         const questionContent = document.getElementById('questionContent').value;
-        // 更新quiz时，要把整个quiz info stringfy 之后再传回去，api接受的就是个string
-        quizInfo.info.name = questionContent;
+        const answer = document.getElementById('answer').value;
+        const timeLimit = document.getElementById('timeLimit').value;
+        const point = document.getElementById('point').value;
+        if (questionContent) {
+            quizInfo.info.questions[questionIndex].content = questionContent;
+        }
+        if (answer) {
+            quizInfo.info.questions[questionIndex].ans = answer;
+        }
+        if (timeLimit) {
+            quizInfo.info.questions[questionIndex].time = timeLimit;
+        }
+        if (point) {
+            quizInfo.info.questions[questionIndex].point = point;
+        }
         const quizJSONString = JSON.stringify(quizInfo.info);
         // console.log(quizJSONString);
         putQuiz(token, id, quizJSONString).then((data) => {
-            history.push(`./${id}`);
+            history.push(`/edit/${id}/${questionId}`);
         })
     }
     return (
         <React.Fragment>
-        <Grid container spacing={0.5} direction='column' justify="space-evenly" alignContent="center" >
+        <Grid container spacing={1} direction='column' justify="space-evenly" alignContent="center" >
+            <Box mx="auto">
+            <Title component="p" variant="h4">
+                {`Quiz: ${quizInfo.info.name}, Question: ${parseInt(questionIndex) + 1}`}
+            </Title>
+            </Box>
             <TextField
                 variant="standard"
                 label={quizInfo.info ? `Question: ${quizInfo.info.questions[questionIndex].content}` : 'Question content' }
                 id="questionContent"
                 className={classes.bigInput}
-                fullWidth="true"
                 item='true'
             />
             <TextField
                 variant="standard"
                 label={quizInfo.info ? `Answer: ${quizInfo.info.questions[questionIndex].ans}` : 'Answer: null' }
                 className={classes.bigInput}
-                id="Answer"
-                fullWidth="true"
+                id="answer"
                 item='true'
             />
-            <Grid container spacing={0.5} justify="space-evenly" alignContent="center" >
+            <Grid container spacing={1} justify="space-evenly" alignContent="center" >
                 <TextField
                     variant="standard"
                     label={quizInfo.info ? `Time limit: ${quizInfo.info.questions[questionIndex].time}` : 'Time limit: 0' }
@@ -105,10 +122,10 @@ export default function QuizCardInEdit (quizInfo) {
                     label={quizInfo.info ? `Points: ${quizInfo.info.questions[questionIndex].point}` : 'Points: 0' }
                     className={classes.smallInput}
                     size="small"
-                    id="Points"
+                    id="point"
                 />
             </Grid>
-            <Box m={3} mx="auto">
+            <Box m={2} mx="auto">
                 <Button size="small" color="primary" variant="contained" onClick={updateQuestion} >
                 Submit All
                 </Button>

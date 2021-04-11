@@ -71,7 +71,7 @@ export default function Gamecard (quiz) {
         if (!questions) return 0;
         let res = 0;
         for (let i = 0; i < questions.length; ++i) {
-            res += questions[i].time;
+            res += parseInt(questions[i].time);
         }
         return res;
     }
