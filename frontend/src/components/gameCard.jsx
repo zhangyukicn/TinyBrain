@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-import { getQuizQuestions, deleteQuiz } from '../api';
+import { getQuizQuestions, deleteQuiz, startQuiz } from '../api';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -65,7 +65,6 @@ export default function Gamecard (quiz) {
     }
 
     React.useEffect(() => { fetchQuestions(); }, [token]);
-    // React.useEffect(() => { window.location.reload(); }, [questions ? questions.length : null]);
 
     const getTotalTime = () => {
         if (!questions) return 0;
@@ -84,16 +83,18 @@ export default function Gamecard (quiz) {
         localStorage.setItem('quiz_id', quiz.quiz.id);
         history.push(`./edit/${quiz.quiz.id}`);
     }
-    /*
-    title
-    number of questions
-    a thumbnail
-    a total time to complete
-    Edit button
-    create, 点击加空卡片
-    delete button
-    */
 
+    const startNewSession = () => {
+        startQuiz(token, quiz.quiz.id).then(data => {
+            console.log(data);
+            const sessionId = data.active;
+            localStorage.setItem('quiz_id', quiz.quiz.id);
+            localStorage.setItem('sessionId', sessionId);
+            // window.open(`/play/${sessionId}`);
+            history.push(`/play/${sessionId}`);
+            return true;
+        })
+    }
     return (
         <Grid item quiz={quiz} xs={12} sm={6} md={4}>
             <Card className={classes.quiz}>
@@ -116,7 +117,7 @@ export default function Gamecard (quiz) {
             <CardActions>
                 <Grid container spacing={10} justify="center" alignContent="center" >
                     <Box m={5}>
-                    <Button size="small" color="primary" variant="contained" p={2}>
+                    <Button size="small" color="primary" variant="contained" p={2} onClick={startNewSession}>
                     Play
                     </Button>
                     <Button size="small" color="primary" p={2} onClick={goToEdit}>

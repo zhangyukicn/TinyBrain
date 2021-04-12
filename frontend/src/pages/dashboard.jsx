@@ -53,14 +53,13 @@ export default function Dashboard () {
     const classes = useStyles();
     const token = localStorage.getItem('token');
     const [quizzes, setQuizzes] = React.useState();
-    React.useEffect(() => { fetchQuizInfo(); }, [token]);
 
-    const fetchQuizInfo = () => {
+    const fetchQuizInfo = async () => {
         getAllQuiz(token).then(data => {
             setQuizzes(Object.values(data));
         });
     }
-
+    React.useEffect(() => { fetchQuizInfo(); }, []);
     console.log(quizzes);
 
     const submitCreate = () => {
