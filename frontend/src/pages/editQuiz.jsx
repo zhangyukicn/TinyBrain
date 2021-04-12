@@ -145,7 +145,15 @@ export default function Editboard () {
                 content: null,
                 point: 0,
                 img: null,
-                options: [],
+                options: [
+                    {
+                        idx: 0,
+                        txt: null
+                    },
+                    {
+                        idx: 1,
+                        txt: null
+                    }],
                 ans: null,
                 time: 0
             });
@@ -155,7 +163,15 @@ export default function Editboard () {
                 content: null,
                 point: 0,
                 img: null,
-                options: [],
+                options: [
+                    {
+                        idx: 0,
+                        txt: null
+                    },
+                    {
+                        idx: 1,
+                        txt: null
+                    }],
                 ans: null,
                 time: 0
             });

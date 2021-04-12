@@ -36,7 +36,7 @@ export default function EditImage (info) {
     }
     const [thumbnail, setThumbnail] = useState(tmpThumb);
     useEffect(() => { setThumbnail(tmpThumb); }, [tmpThumb]);
-    console.log(info);
+    // console.log(info);
     const getImage = async (imgInput) => {
         const reader = new FileReader();
         reader.readAsDataURL(imgInput.files[0]);

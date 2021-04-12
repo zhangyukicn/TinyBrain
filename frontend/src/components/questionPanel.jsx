@@ -63,22 +63,36 @@ export default function QuizCardInEdit (quizInfo) {
     const questionId = localStorage.getItem('questionId');
     const questionIndex = localStorage.getItem('questionIndex');
     const token = localStorage.getItem('token');
-    console.log(quizInfo);
+    // console.log(quizInfo);
     const updateQuestion = () => {
         const questionContent = document.getElementById('questionContent').value;
         const answer = document.getElementById('answer').value;
         const timeLimit = document.getElementById('timeLimit').value;
         const point = document.getElementById('point').value;
+        const pattNum = /^[+]{0,1}(\d+)$/;
         if (questionContent) {
             quizInfo.info.questions[questionIndex].content = questionContent;
         }
         if (answer) {
+            const patt = /(^[A-F]{1}(\s*,\s*[A-F]{1}\s*)*$)/;
+            if (!patt.test(answer)) {
+                alert('Invalid answer input format. Correct format example: A or A, B, C');
+                return false;
+            }
             quizInfo.info.questions[questionIndex].ans = answer;
         }
         if (timeLimit) {
+            if (!pattNum.test(timeLimit)) {
+                alert('time limit should be a postive integer');
+                return false;
+            }
             quizInfo.info.questions[questionIndex].time = timeLimit;
         }
         if (point) {
+            if (!pattNum.test(point)) {
+                alert('Points should be a postive integer');
+                return false;
+            }
             quizInfo.info.questions[questionIndex].point = point;
         }
         const quizJSONString = JSON.stringify(quizInfo.info);
@@ -104,7 +118,7 @@ export default function QuizCardInEdit (quizInfo) {
             />
             <TextField
                 variant="standard"
-                label={quizInfo.info ? `Answer: ${quizInfo.info.questions[questionIndex].ans}` : 'Answer: null' }
+                label={quizInfo.info ? `Answer: ${quizInfo.info.questions[questionIndex].ans} (format: A or A,B)` : 'Answer: null, format: A or A,B' }
                 className={classes.bigInput}
                 id="answer"
                 item='true'

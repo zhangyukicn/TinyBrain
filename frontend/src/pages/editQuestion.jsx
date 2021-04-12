@@ -18,10 +18,10 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from '@material-ui/core/Button';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import QuestionPanel from '../components/questionPanel';
-import HistoryRecords from '../components/history';
 import Copyright from '../components/copyRight';
 import EditImg from '../components/questionImg';
-import SlideBarBtn from '../components/slideBarBtn'
+import SlideBarBtn from '../components/slideBarBtn';
+import Options from '../components/questionOptions';
 import { useHistory } from 'react-router-dom';
 import { LogOut, getQuizInfo, putQuiz } from '../api';
 
@@ -162,7 +162,15 @@ export default function Editboard () {
                 content: null,
                 point: 0,
                 img: null,
-                options: [],
+                options: [
+                    {
+                        idx: 0,
+                        txt: null
+                    },
+                    {
+                        idx: 1,
+                        txt: null
+                    }],
                 ans: null,
                 time: 0
             });
@@ -172,7 +180,15 @@ export default function Editboard () {
                 content: null,
                 point: 0,
                 img: null,
-                options: [],
+                options: [
+                    {
+                        idx: 0,
+                        txt: null
+                    },
+                    {
+                        idx: 1,
+                        txt: null
+                    }],
                 ans: null,
                 time: 0
             });
@@ -261,7 +277,7 @@ export default function Editboard () {
                     {/* Recent Orders */}
                     <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        <HistoryRecords />
+                        <Options info={quizInfo}/>
                     </Paper>
                     </Grid>
                 </Grid>
