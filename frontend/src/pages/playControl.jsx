@@ -121,6 +121,7 @@ export default function Playcontrol () {
     const quitSession = () => {
         stopSession(token, quizId);
         alert('Game abort');
+        localStorage.setItem('active', 0);
         history.push('/dashBoard');
     }
     const idxToOption = (idx) => {

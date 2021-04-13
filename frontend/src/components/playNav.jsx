@@ -35,6 +35,7 @@ export default function PlayNav () {
             LogOut(token).then(res => {
                 localStorage.removeItem('token');
                 localStorage.removeItem('quiz_id');
+                localStorage.setItem('active', 0);
                 history.push('/');
             });
         })
@@ -43,15 +44,13 @@ export default function PlayNav () {
         event.preventDefault();
         stopSession(token, quizId).then(res => {
             localStorage.removeItem('quiz_id');
+            localStorage.setItem('active', 0);
             history.push('/');
         })
     }
-    const stopGame = (event) => {
-        event.preventDefault();
-        stopSession(token, quizId);
-        alert('stopped!');
+    const playJoin = (event) => {
+        window.open('/playerdashboard');
     }
-
     return (
         <div className={classes.root}>
         <AppBar position="static">
@@ -61,8 +60,7 @@ export default function PlayNav () {
             </Typography>
             <Button color="inherit" onClick={backHome}>Home</Button>
             <Button color="inherit" onClick={navLogOut}>LogOut</Button>
-            <Button color="inherit" onClick={backHome}>Proceed</Button>
-            <Button color="inherit" onClick={stopGame}>Stop</Button>
+            <Button color="inherit" onClick={playJoin}>JoinGame</Button>
             </Toolbar>
         </AppBar>
         </div>

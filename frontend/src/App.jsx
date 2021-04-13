@@ -45,6 +45,7 @@ import Playcontrol from './pages/playControl';
 
 function App () {
     const tokenStored = localStorage.getItem('token');
+    const active = localStorage.getItem('active');
     const [token, setToken] = React.useState(tokenStored !== null ? tokenStored : '');
     // useState这个函数接收的参数是状态的初始值(Initial state)
     // 它返回一个数组，这个数组的第0位是当前的状态值，第1位是可以改变状态值的方法函数。
@@ -52,13 +53,14 @@ function App () {
         localStorage.setItem('token', token);
     }, [token]); // change when token changed
     console.log(token);
+    console.log(active);
     return (
         <Router>
             {/* A <Switch> looks through its children <Route>s and
                 renders the first one that matches the current URL. */}
             <TokenContext.Provider value={{ token, setToken }}>
                 {/* 检查有否token，没有就进欢迎页面 */}
-                {token ? <Redirect to='/dashboard'/> : <Redirect to='/'/>}
+                {active ? null : (token ? <Redirect to='/dashboard'/> : <Redirect to='/'/>)}
                 <Switch>
                 {/* 必须用exact path 否则匹配到/就不往下匹配了 */}
                 <Route exact path="/" component={Welcome} />

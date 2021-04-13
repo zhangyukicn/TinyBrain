@@ -90,6 +90,7 @@ export default function Gamecard (quiz) {
             const sessionId = data.active;
             localStorage.setItem('quiz_id', quiz.quiz.id);
             localStorage.setItem('sessionId', sessionId);
+            localStorage.setItem('active', 1);
             // window.open(`/play/${sessionId}`);
             history.push(`/play/${sessionId}`);
             return true;
