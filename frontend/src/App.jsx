@@ -69,7 +69,7 @@ function App () {
                 <Route exact path="/edit/:gameId" component={Edit} />
                 <Route exact path="/edit/:gameId/:questionId" component={EditQuestion} />
                 <Route exact path="/play/:session" component={Playcontrol} />
-                {/* <Route exact path="/lobby" component={Lobby} /> */}
+                <Route exact path="/lobby" component={Lobby} />
                 </Switch>
             </TokenContext.Provider>
         </Router>

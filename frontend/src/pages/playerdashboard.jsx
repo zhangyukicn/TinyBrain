@@ -16,6 +16,7 @@ import Copyright from '../components/copyRight';
 import * as CONFIG from '../config.json';
 import { useHistory, Redirect } from 'react-router-dom';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import { PlayerFetchSession } from '../api';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -54,19 +55,23 @@ function Playerdispay () {
         }
     }
 
-    async function PlayerFetchSession (sessionid) {
-        const r = await fetch('/play/join/{sessionid}')
-    }
+    // async function PlayerFetchSession (sessionid) {
+    //     const r = await fetch('/play/join/{sessionid}')
+    // }
 
     const Gobutton = (event) => {
         event.preventDefault();
         const Gamepin = document.getElementById('gamepin').value;
         const Name = document.getElementById('NAME').value;
-        const para = {
-            name: Name
-        }
+
         if (checkgamepin(Gamepin) === true) {
             alert('yes');
+            PlayerFetchSession(Gamepin, Name)
+            .then((data) => {
+                console.log(data);
+                // localStorage.setItem('playerid', data.playerId)
+                history.push('./lobby');
+            })
         }
     }
 
