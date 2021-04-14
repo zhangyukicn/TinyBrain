@@ -124,7 +124,7 @@ export default function Editboard () {
     }
 
     React.useEffect(() => { fetchInfo(); }, []);
-    // console.log(quizInfo);
+    console.log(quizInfo);
     // console.log(quizId);
 
     const navLogOut = (event) => {

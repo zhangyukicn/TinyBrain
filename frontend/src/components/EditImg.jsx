@@ -34,8 +34,8 @@ export default function EditImage (info) {
         reader.onloadend = () => {
             setThumbnail(reader.result);
             document.getElementById('imgPreview').src = thumbnail;
-            console.log(reader.result);
-            console.log(thumbnail);
+            // console.log(reader.result);
+            // console.log(thumbnail);
         };
     }
 

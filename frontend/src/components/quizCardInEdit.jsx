@@ -41,6 +41,23 @@ export default function QuizCardInEdit (quizInfo) {
             history.push(`./${id}`);
         })
     }
+    console.log(quizInfo.info);
+
+    const handleFiles = async (imgInput) => {
+        const reader = new FileReader();
+        reader.readAsText(imgInput.files[0]);
+        reader.onloadend = () => {
+            const data = JSON.parse(reader.result);
+            console.log(data);
+            quizInfo.info.name = data.name;
+            quizInfo.info.thumbnail = data.thumbnail;
+            quizInfo.info.questions = data.questions;
+            const dataJSON = JSON.stringify(quizInfo.info);
+            putQuiz(token, id, dataJSON).then((data) => {
+                history.push(`./${id}`);
+            })
+        };
+    }
     return (
         <React.Fragment>
         <Title component="p" variant="h1">
@@ -62,6 +79,20 @@ export default function QuizCardInEdit (quizInfo) {
             </Button>
             <Button size="small" color="primary" variant="outlined" p={10} onClick={changeName}>
             Change Name
+            </Button>
+            <Button
+                size="small"
+                color="primary"
+                variant="outlined"
+                p={10}
+                component="label"
+            >
+            Upload Game
+            <input
+                type="file"
+                hidden
+                onChange={e => handleFiles(e.target)}
+            />
             </Button>
         </Grid>
         </div>
