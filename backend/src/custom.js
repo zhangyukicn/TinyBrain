@@ -13,8 +13,9 @@ export const quizQuestionPublicReturn = question => {
  the correct answers (minimum 1).
 */
 export const quizQuestionGetCorrectAnswers = question => {
+  console.log('See question: ', question);
   return [
-    123,
+    question["ans"]
   ]; // For a single answer
 };
 

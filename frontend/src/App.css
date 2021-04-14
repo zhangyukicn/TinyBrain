@@ -28,6 +28,63 @@
   color: #61dafb;
 }
 
+.Picture {
+  display: flex;
+  flex-direction: column;
+  background-color: aqua;
+  height: 350px;
+  width: 50%;
+  text-align: center;
+  justify-content: center;
+}
+.picture-part {
+  background-color: black;
+  height: 300px;
+  width: 300px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.Answer{
+  display: block;
+  background-color: yellow;
+  height: 350px;
+  width:70%;
+  overflow-x: scroll;
+  
+}
+.title-part{
+  background-color:white;
+  height: 100px;
+  width:40%;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-bottom: 20px; */
+  text-align: center;
+  margin-top: 20px;
+}
+.pic-part{
+  /* background-color:red; */
+  height: 50px;
+  width:40%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 35px;
+}
+
+
+
+.pressbutton{
+  width:50%;
+  height:50px;
+  margin-left: 25%;
+  margin-right: auto;
+  margin-bottom: 10px;
+  
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

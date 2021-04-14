@@ -58,9 +58,6 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
     },
-    fixedHeight: {
-        height: 500
-    }
 }));
 /*
 开始了之后，重新再去get这个quiz的信息，active那里就会出现6位数的session number
@@ -97,11 +94,9 @@ export default function Playcontrol () {
     const token = localStorage.getItem('token');
     const quizId = localStorage.getItem('quiz_id');
     const sessionId = localStorage.getItem('sessionId');
-    const emptyImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi8v42_qIIylFc_HQITxDN8AQAHnoFvxKnqg&usqp=CAU';
-
     const [sessionInfo, setSessionInfo] = React.useState(0);
     const [quizInfo, setQuizInfo] = React.useState(0);
-
+    const emptyImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi8v42_qIIylFc_HQITxDN8AQAHnoFvxKnqg&usqp=CAU';
     const fetchSessionInfo = () => {
         getSessionInfo(token, sessionId).then(data => {
             setSessionInfo(data);
@@ -112,10 +107,18 @@ export default function Playcontrol () {
             setQuizInfo(data);
         });
     }
-
     React.useEffect(() => { fetchSessionInfo(); }, []);
     React.useEffect(() => { fetchQuizInfo(); }, []);
 
+    console.log(sessionInfo);
+    console.log(quizInfo);
+    // console.log(sessionInfo.results.position);
+
+    // const proceedSession = () => {
+    //     advanceSession(token, quizId);
+    //     alert('Proceed!');
+    //     fetchSessionInfo();
+    // }
     const quitSession = () => {
         stopSession(token, quizId);
         alert('Game abort');
@@ -123,6 +126,9 @@ export default function Playcontrol () {
         history.push(`/play/${sessionId}/result`);
     }
     const proceedSession = () => {
+        advanceSession(token, quizId);
+        alert('Proceed!');
+        fetchSessionInfo();
         console.log(`pos: ${sessionInfo.results.position}, length: ${sessionInfo.results.questions.length}`);
         if (sessionInfo.results.position === sessionInfo.results.questions.length - 1) {
             localStorage.setItem('active', 0);
@@ -139,32 +145,27 @@ export default function Playcontrol () {
         return String.fromCharCode(65 + idx);
     }
     console.log(sessionInfo);
+
     return (
         <div>
             <Nav />
-            <Grid container spacing={0}>
+            <Grid container spacing={4}>
                 {/* control panel */}
-                <Grid item >
-                    <Card className={classes.fixedHeight}>
+                <Grid item>
+                    <Card>
                         <CardMedia
                             className={classes.cardMedia}
                             image={quizInfo ? quizInfo.thumbnail : emptyImg}
                         />
                         <CardContent className={classes.cardContent}>
                             <Typography gutterBottom variant="h5" component="h2">
-                                {`Quiz: ${quizInfo.name}`}
+                            {`Quiz: ${quizInfo.name}`}
                             </Typography>
                             <Typography gutterBottom variant="h5" component="h2">
-                                {`session ID: ${quizInfo.active}`}
+                            {`session ID: ${quizInfo.active}`}
                             </Typography>
                             <Typography gutterBottom variant="h5" component="h2">
-                                {sessionInfo.results ? (sessionInfo.results.position === -1 ? 'Session Not Started Yet' : `Question: ${sessionInfo.results.position + 1}`) : null}
-                            </Typography>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                {sessionInfo.results ? (sessionInfo.results.position === -1 ? null : `Time limit: ${sessionInfo.results.questions[sessionInfo.results.position].time}`) : null}
-                            </Typography>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                {sessionInfo.results ? (sessionInfo.results.position === -1 ? null : `Point: ${sessionInfo.results.questions[sessionInfo.results.position].point}`) : null}
+                            {sessionInfo.results ? (sessionInfo.results.position === -1 ? 'Session Not Started Yet' : `Question: ${sessionInfo.results.position + 1}`) : null}
                             </Typography>
                         </CardContent>
                         <CardActions>
@@ -182,31 +183,22 @@ export default function Playcontrol () {
                     </Card>
                 </Grid>
                 {/* questions */}
-                <Grid item xs >
-                    <Card className={classes.fixedHeight}>
+                <Grid item xs>
+                    <Card>
                         <CardContent className={classes.cardContent}>
                             <CardMedia
                                 className={classes.cardMedia}
                                 image={sessionInfo ? (sessionInfo.results.position === -1 ? emptyImg : (sessionInfo.results.questions[sessionInfo.results.position].img ? sessionInfo.results.questions[sessionInfo.results.position].img : emptyImg)) : emptyImg}
                             />
-                            {/* Question content */}
                             {sessionInfo
                             ? (sessionInfo.results.position === -1
                                 ? (<Typography gutterBottom variant="h5" component="h2">
                                         {'Session not started yet'}
                                     </Typography>)
-                                    : (<Typography gutterBottom variant="h5" component="h2">
-                                            {`Question ${sessionInfo.results.position + 1}: ${sessionInfo.results.questions[sessionInfo.results.position].content}`}
-                                        </Typography>))
-                                : null}
-                            {/* Question options */}
-                            {sessionInfo
-                            ? (sessionInfo.results.position === -1
-                                ? null
-                                : sessionInfo.results.questions[sessionInfo.results.position].options.map((option, index) =>
-                                    (<Typography gutterBottom key={sessionId + index} variant="h5" component="h2">
-                                        {`${idxToOption(index)}: ${option.txt}`}
-                                    </Typography>)))
+                                    : sessionInfo.results.questions[sessionInfo.results.position].options.map((option, index) =>
+                                        (<Typography gutterBottom key={sessionId + index} variant="h5" component="h2">
+                                            {`${idxToOption(index)}: ${option.txt}`}
+                                        </Typography>)))
                                 : null}
                         </CardContent>
                     </Card>

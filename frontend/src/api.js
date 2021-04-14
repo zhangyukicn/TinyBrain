@@ -256,14 +256,33 @@ export const getSessionResult = async (token, sessionId) => {
     }
 }
 
-export const WaitingStartSession = async (playerid, name) => {
-    const res = await fetch(`${port}/play/${playerid}/status`, {
+export const GotQuestion = async (playerid) => {
+    const res = await fetch(`${port}/play/${playerid}/question`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
     });
-    // console.log(info);
+    const data = await res.json();
+    if (res.status === 200) {
+        return data;
+    } else {
+        console.log(res);
+        alert('Failed');
+        // throw new Error('Log out failed');
+    }
+}
+
+export const PutAnswer = async (playerid, info) => {
+    const res = await fetch(`${port}/play/${playerid}/answer`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            answerIds: info
+        }),
+    });
     const data = await res.json();
     if (res.status === 200) {
         return data;

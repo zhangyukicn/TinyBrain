@@ -82,7 +82,7 @@ function Playerdispay () {
                     // console.log(res);
                     localStorage.setItem('playerid', res.playerId);
                     console.log(localStorage.getItem('playerid'));
-                    history.push('/lobby');
+                    history.push('./lobby');
                     })
                 } else {
                     res.json().then(res => {
