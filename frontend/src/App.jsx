@@ -17,6 +17,7 @@ import Lobby from './pages/lobby';
 import Edit from './pages/editQuiz';
 import EditQuestion from './pages/editQuestion';
 import Playcontrol from './pages/playControl';
+import PlayerplayingDashborad from './pages/playerplayingDashborad';
 
 // yarn add @material-ui/icons
 // yarn add @material-ui/core
@@ -72,6 +73,7 @@ function App () {
                 <Route exact path="/edit/:gameId/:questionId" component={EditQuestion} />
                 <Route exact path="/play/:session" component={Playcontrol} />
                 <Route exact path="/lobby" component={Lobby} />
+                <Route exact path="/playing" component={PlayerplayingDashborad} />
                 </Switch>
             </TokenContext.Provider>
         </Router>

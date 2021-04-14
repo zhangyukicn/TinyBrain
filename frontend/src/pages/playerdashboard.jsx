@@ -66,11 +66,30 @@ function Playerdispay () {
 
         if (checkgamepin(Gamepin) === true) {
             alert('yes');
-            PlayerFetchSession(Gamepin, Name)
-            .then((data) => {
-                console.log(data);
-                // localStorage.setItem('playerid', data.playerId)
-                history.push('./lobby');
+            const para = {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: Name
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            };
+            fetch(`http://localhost:${CONFIG.BACKEND_PORT}/play/join/${Gamepin}`, para).then(res => {
+                if (res.status === 200) {
+                    res.json().then(res => {
+                    // save token here
+                    localStorage.setItem('playerid', res.playerId);
+                    // console.log(localStorage.getItem('token'));
+                    history.push('./lobby');
+                    })
+                } else {
+                    res.json().then(res => {
+                        console.log(res.error);
+                        alert(res.error);
+                        return false;
+                    })
+                }
             })
         }
     }
