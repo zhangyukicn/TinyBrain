@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-import { getQuizQuestions, deleteQuiz, startQuiz } from '../api';
+import { getQuizQuestions, deleteQuiz, startQuiz, stopSession } from '../api';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -96,6 +96,12 @@ export default function Gamecard (quiz) {
             return true;
         })
     }
+    const quitSession = () => {
+        stopSession(token, quiz.quiz.id);
+        alert('Game abort');
+        localStorage.setItem('active', 0);
+        return true;
+    }
     return (
         <Grid item quiz={quiz} xs={12} sm={6} md={4}>
             <Card className={classes.quiz}>
@@ -126,6 +132,9 @@ export default function Gamecard (quiz) {
                     </Button>
                     <Button size="small" color="primary" p={2} onClick={deleteButton}>
                     Delete
+                    </Button>
+                    <Button size="small" color="primary" p={2} onClick={quitSession}>
+                    Stop
                     </Button>
                     </Box>
                 </Grid>
