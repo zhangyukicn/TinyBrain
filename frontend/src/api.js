@@ -209,7 +209,7 @@ export const stopSession = async (token, quizid) => {
     });
     const data = await res.json();
     if (res.status === 200) {
-        console.log(data);
+        // console.log(data);
         return data;
     } else {
         console.log(res);
@@ -221,6 +221,25 @@ export const stopSession = async (token, quizid) => {
 export const advanceSession = async (token, quizid) => {
     const res = await fetch(`${port}/admin/quiz/${quizid}/advance`, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    const data = await res.json();
+    if (res.status === 200) {
+        // console.log(data);
+        return data;
+    } else {
+        console.log(res);
+        alert('Failed');
+        // throw new Error('Log out failed');
+    }
+}
+
+export const getSessionResult = async (token, sessionId) => {
+    const res = await fetch(`${port}/admin/session/${sessionId}/results`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,

@@ -79,9 +79,10 @@ function Playerdispay () {
                 if (res.status === 200) {
                     res.json().then(res => {
                     // save token here
+                    // console.log(res);
                     localStorage.setItem('playerid', res.playerId);
-                    // console.log(localStorage.getItem('token'));
-                    history.push('./lobby');
+                    console.log(localStorage.getItem('playerid'));
+                    history.push('/lobby');
                     })
                 } else {
                     res.json().then(res => {

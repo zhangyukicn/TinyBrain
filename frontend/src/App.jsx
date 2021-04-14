@@ -55,7 +55,7 @@ function App () {
         localStorage.setItem('token', token);
     }, [token]); // change when token changed
     console.log(token);
-
+    console.log(active);
     return (
         <Router>
             {/* A <Switch> looks through its children <Route>s and
@@ -73,7 +73,7 @@ function App () {
                 <Route exact path="/edit/:gameId" component={Edit} />
                 <Route exact path="/edit/:gameId/:questionId" component={EditQuestion} />
                 <Route exact path="/play/:session" component={Playcontrol} />
-                <Route exact path="/play/:session/result" component={Playcontrol} />
+                <Route exact path="/play/:session/result" component={PlayResult} />
                 <Route exact path="/lobby" component={Lobby} />
                 <Route exact path="/playing" component={PlayerplayingDashborad} />
                 </Switch>

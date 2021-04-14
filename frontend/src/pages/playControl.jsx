@@ -115,21 +115,30 @@ export default function Playcontrol () {
 
     React.useEffect(() => { fetchSessionInfo(); }, []);
     React.useEffect(() => { fetchQuizInfo(); }, []);
-    console.log(sessionInfo);
-    const proceedSession = () => {
-        advanceSession(token, quizId);
-        alert('Proceed!');
-        fetchSessionInfo();
-    }
+
     const quitSession = () => {
         stopSession(token, quizId);
         alert('Game abort');
         localStorage.setItem('active', 0);
-        history.push('/dashBoard');
+        history.push(`/play/${sessionId}/result`);
+    }
+    const proceedSession = () => {
+        console.log(`pos: ${sessionInfo.results.position}, length: ${sessionInfo.results.questions.length}`);
+        if (sessionInfo.results.position === sessionInfo.results.questions.length - 1) {
+            localStorage.setItem('active', 0);
+            console.log(`pos: ${sessionInfo.results.position}, length: ${sessionInfo.results.questions.length}`);
+            // quitSession();
+            localStorage.setItem('active', 0);
+            history.push(`/play/${sessionId}/result`);
+        }
+        advanceSession(token, quizId);
+        alert('Proceed!');
+        fetchSessionInfo();
     }
     const idxToOption = (idx) => {
         return String.fromCharCode(65 + idx);
     }
+    console.log(sessionInfo);
     return (
         <div>
             <Nav />

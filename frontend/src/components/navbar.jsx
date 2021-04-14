@@ -32,7 +32,7 @@ export default function ButtonAppBar () {
         console.log(token);
         LogOut(token).then(res => {
             localStorage.removeItem('token');
-            history.push('./');
+            history.push('/');
         });
     }
 
@@ -43,7 +43,7 @@ export default function ButtonAppBar () {
             <Typography variant="h6" className={classes.title}>
                 TinyBrain
             </Typography>
-            <Button color="inherit" onClick={() => history.push('./dashboard')}>Home</Button>
+            <Button color="inherit" onClick={() => history.push('/dashboard')}>Home</Button>
             <Button color="inherit" onClick={navLogOut}>LogOut</Button>
             </Toolbar>
         </AppBar>

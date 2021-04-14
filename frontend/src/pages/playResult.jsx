@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Copyright from '../components/copyRight';
-import Nav from '../components/playNav';
+import Nav from '../components/navbar';
 import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -15,7 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-import { getQuizInfo, getQuizQuestions, stopSession, getSessionInfo, advanceSession } from '../api';
+import { getQuizInfo, getSessionResult, getSessionInfo } from '../api';
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -62,35 +62,6 @@ const useStyles = makeStyles((theme) => ({
         height: 500
     }
 }));
-/*
-开始了之后，重新再去get这个quiz的信息，active那里就会出现6位数的session number
-这个游戏被停掉之后，active 就会重新置为null
-然后之前的session number 被推到old session里面 这个可以用来fetch history
-刚开始的时候 position == -1
-查状态返回值
-{
-  "results": {
-    "active": true,
-    "answerAvailable": false,
-    "isoTimeLastQuestionStarted": "2021-04-12T07:43:43.482Z",
-    "position": 0,
-    "questions":[]
-}
-advance 之后, position 到 0
-返回值为
-  "results": {
-    "active": true,
-    "answerAvailable": false,
-    "isoTimeLastQuestionStarted": "2021-04-12T07:43:43.482Z",
-    "position": 0,
-    "questions": [
-      {"id": 1},
-      {"id": 2}],
-    "players": []
-}
-advance 直至没有问题了
-position 就是第几个问题
-*/
 export default function Playcontrol () {
     const classes = useStyles();
     const history = useHistory();
@@ -101,6 +72,7 @@ export default function Playcontrol () {
 
     const [sessionInfo, setSessionInfo] = React.useState(0);
     const [quizInfo, setQuizInfo] = React.useState(0);
+    const [sessionRes, setSessionRes] = React.useState(0);
 
     const fetchSessionInfo = () => {
         getSessionInfo(token, sessionId).then(data => {
@@ -112,21 +84,17 @@ export default function Playcontrol () {
             setQuizInfo(data);
         });
     }
+    const fetchSessionResult = () => {
+        getSessionResult(token, sessionId).then(data => {
+            setSessionRes(data);
+            console.log(data);
+        })
+    }
 
     React.useEffect(() => { fetchSessionInfo(); }, []);
     React.useEffect(() => { fetchQuizInfo(); }, []);
-    console.log(sessionInfo);
-    const proceedSession = () => {
-        advanceSession(token, quizId);
-        alert('Proceed!');
-        fetchSessionInfo();
-    }
-    const quitSession = () => {
-        stopSession(token, quizId);
-        alert('Game abort');
-        localStorage.setItem('active', 0);
-        history.push('/dashBoard');
-    }
+    React.useEffect(() => { fetchSessionResult(); }, []);
+
     const idxToOption = (idx) => {
         return String.fromCharCode(65 + idx);
     }
@@ -146,59 +114,15 @@ export default function Playcontrol () {
                                 {`Quiz: ${quizInfo.name}`}
                             </Typography>
                             <Typography gutterBottom variant="h5" component="h2">
-                                {`session ID: ${quizInfo.active}`}
-                            </Typography>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                {sessionInfo.results ? (sessionInfo.results.position === -1 ? 'Session Not Started Yet' : `Question: ${sessionInfo.results.position + 1}`) : null}
-                            </Typography>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                {sessionInfo.results ? (sessionInfo.results.position === -1 ? null : `Time limit: ${sessionInfo.results.questions[sessionInfo.results.position].time}`) : null}
-                            </Typography>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                {sessionInfo.results ? (sessionInfo.results.position === -1 ? null : `Point: ${sessionInfo.results.questions[sessionInfo.results.position].point}`) : null}
+                                {`session ID: ${sessionId}`}
                             </Typography>
                         </CardContent>
-                        <CardActions>
-                            <Grid container spacing={10} justify="center" alignContent="center" >
-                                <Box m={5}>
-                                <Button size="small" color="primary" variant="contained" p={2} onClick={proceedSession}>
-                                Proceed
-                                </Button>
-                                <Button size="small" color="primary" p={2} onClick={quitSession}>
-                                Quit
-                                </Button>
-                                </Box>
-                            </Grid>
-                        </CardActions>
                     </Card>
                 </Grid>
                 {/* questions */}
                 <Grid item xs >
                     <Card className={classes.fixedHeight}>
                         <CardContent className={classes.cardContent}>
-                            <CardMedia
-                                className={classes.cardMedia}
-                                image={sessionInfo ? (sessionInfo.results.position === -1 ? emptyImg : (sessionInfo.results.questions[sessionInfo.results.position].img ? sessionInfo.results.questions[sessionInfo.results.position].img : emptyImg)) : emptyImg}
-                            />
-                            {/* Question content */}
-                            {sessionInfo
-                            ? (sessionInfo.results.position === -1
-                                ? (<Typography gutterBottom variant="h5" component="h2">
-                                        {'Session not started yet'}
-                                    </Typography>)
-                                    : (<Typography gutterBottom variant="h5" component="h2">
-                                            {`Question ${sessionInfo.results.position + 1}: ${sessionInfo.results.questions[sessionInfo.results.position].content}`}
-                                        </Typography>))
-                                : null}
-                            {/* Question options */}
-                            {sessionInfo
-                            ? (sessionInfo.results.position === -1
-                                ? null
-                                : sessionInfo.results.questions[sessionInfo.results.position].options.map((option, index) =>
-                                    (<Typography gutterBottom key={sessionId + index} variant="h5" component="h2">
-                                        {`${idxToOption(index)}: ${option.txt}`}
-                                    </Typography>)))
-                                : null}
                         </CardContent>
                     </Card>
                 </Grid>
