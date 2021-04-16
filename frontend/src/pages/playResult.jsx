@@ -108,7 +108,7 @@ export default function Playcontrol () {
 
     const getTopFive = () => {
         let ans = '';
-        if (sessionRes.results && sessionInfo.results) {
+        if (sessionRes && sessionInfo) {
             for (let i = 0; i < sessionRes.results.length; ++i) {
                 let points = 0;
                 for (let j = 0; j < sessionRes.results[i].answers.length; ++j) {
@@ -127,7 +127,7 @@ export default function Playcontrol () {
     }
     const getResEachQuestion = () => {
         const res = [];
-        if (sessionRes.results && sessionInfo.results) {
+        if (sessionRes && sessionInfo) {
             for (let i = 0; i < sessionInfo.results.questions.length; ++i) {
                 res.push({ id: i, correct: 0 });
             }

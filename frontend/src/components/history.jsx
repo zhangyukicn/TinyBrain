@@ -61,10 +61,10 @@ function Rows (info) {
     console.log(sessionRes);
     console.log(sessionInfo);
     return (
-        <TableRow key={info.info}>
-        <TableCell component="a" href={`/play/${sessionId}/result`}>{`${sessionId}`}</TableCell>
+        <TableRow key={info.info} onClick={() => { window.open(`/play/${sessionId}/result`); }} hover>
+        <TableCell>{`${sessionId}`}</TableCell>
         <TableCell>{`${sessionRes.results ? sessionRes.results.length : null}`}</TableCell>
-        <TableCell align="right">{`${getResEachQuestion() * 100}%`}</TableCell>
+        <TableCell align="right">{getResEachQuestion() ? `${getResEachQuestion() * 100}%` : '0%'}</TableCell>
         </TableRow>
     );
 }
