@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function Playcontrol () {
     const classes = useStyles();
-    const history = useHistory();
     const token = localStorage.getItem('token');
     const quizId = localStorage.getItem('quiz_id');
     const sessionId = localStorage.getItem('sessionId');
@@ -73,7 +72,6 @@ export default function Playcontrol () {
     const [sessionInfo, setSessionInfo] = React.useState(0);
     const [quizInfo, setQuizInfo] = React.useState(0);
     const [sessionRes, setSessionRes] = React.useState(0);
-
     const fetchSessionInfo = () => {
         getSessionInfo(token, sessionId).then(data => {
             setSessionInfo(data);
@@ -90,6 +88,15 @@ export default function Playcontrol () {
             console.log(data);
         })
     }
+    function compare (a, b) {
+        if (a.point < b.point) {
+          return -1;
+        }
+        if (a.point > b.point) {
+          return 1;
+        }
+        return 0;
+    }
 
     React.useEffect(() => { fetchSessionInfo(); }, []);
     React.useEffect(() => { fetchQuizInfo(); }, []);
@@ -98,6 +105,44 @@ export default function Playcontrol () {
     const idxToOption = (idx) => {
         return String.fromCharCode(65 + idx);
     }
+
+    const getTopFive = () => {
+        let ans = '';
+        if (sessionRes.results && sessionInfo.results) {
+            for (let i = 0; i < sessionRes.results.length; ++i) {
+                let points = 0;
+                for (let j = 0; j < sessionRes.results[i].answers.length; ++j) {
+                    if (sessionRes.results[i].answers[j].correct) {
+                        points += parseInt(sessionInfo.results.questions[j].point);
+                    }
+                }
+                sessionRes.results[i].point = points;
+            }
+            sessionRes.results.sort(compare);
+            for (let i = 0; i < 5 && i < sessionRes.results.length; ++i) {
+                ans += sessionRes.results[i].name + ': ' + sessionRes.results[i].point + ' points\n';
+            }
+        }
+        return ans;
+    }
+    const getResEachQuestion = () => {
+        const res = [];
+        if (sessionRes.results && sessionInfo.results) {
+            for (let i = 0; i < sessionInfo.results.questions.length; ++i) {
+                res.push({ id: i, correct: 0 });
+            }
+            for (let i = 0; i < sessionRes.results.length; ++i) {
+                for (let j = 0; j < sessionRes.results[i].answers.length; ++j) {
+                    if (sessionRes.results[i].answers[j].correct) {
+                        res[j].correct += 1;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    console.log(sessionRes);
+    console.log(sessionInfo);
     return (
         <div>
             <Nav />
@@ -123,6 +168,14 @@ export default function Playcontrol () {
                 <Grid item xs >
                     <Card className={classes.fixedHeight}>
                         <CardContent className={classes.cardContent}>
+                            {/* top 5 players */}
+                            <Typography gutterBottom variant="h5" component="h2">
+                                {`Top five players: \n${getTopFive()}`};
+                            </Typography>
+                            {getResEachQuestion().map((q, index) =>
+                                (<Typography gutterBottom key={sessionId + index} variant="h5" component="h2">
+                                    {`Question ${index + 1}: ${q.correct}`}
+                                </Typography>))}
                         </CardContent>
                     </Card>
                 </Grid>

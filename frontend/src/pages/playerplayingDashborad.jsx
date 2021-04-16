@@ -94,8 +94,6 @@ function AnswerDispay () {
   const Clickfunction = (event) => {
     const checkbox = document.querySelectorAll("input[type='checkbox']");
     // console.log(checkbox);
-    let info = 0;
-
     const feature = [];
     for (let i = 0; i < checkbox.length; i++) {
       if (checkbox[i].checked === true) {
@@ -104,12 +102,9 @@ function AnswerDispay () {
     }
     console.log(feature);
     console.log('yes');
-    for (let i = 0; i < feature.length; i++) {
-      info = feature[i];
-    }
-    PutAnswer(playerid, info)
+    PutAnswer(playerid, feature)
       .then(result => {
-        console.log(result);
+        console.log(feature);
       })
   }
 

@@ -129,7 +129,7 @@ export const putQuiz = async (token, id, info) => {
         },
         body: info
     });
-    console.log(info);
+    // console.log(info);
     const data = await res.json();
     if (res.status === 200) {
         return data;
@@ -177,27 +177,6 @@ export const getSessionInfo = async (token, id) => {
         // throw new Error('Log out failed');
     }
 }
-
-// export const PlayerFetchSession = async (sessionid, name) => {
-//     const res = await fetch(`${port}/play/join/${sessionid}`, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//             name: name
-//         }),
-//     });
-//     // console.log(info);
-//     const data = await res.json();
-//     if (res.status === 200) {
-//         return data;
-//     } else {
-//         console.log(res);
-//         alert('Failed');
-//         // throw new Error('Log out failed');
-//     }
-// }
 
 export const stopSession = async (token, quizid) => {
     const res = await fetch(`${port}/admin/quiz/${quizid}/end`, {

@@ -64,6 +64,39 @@ export default function QuizCardInEdit (quizInfo) {
     const questionIndex = localStorage.getItem('questionIndex');
     const token = localStorage.getItem('token');
     // console.log(quizInfo);
+    const intInArray = (int, array) => {
+        for (let i = 0; i < array.length; ++i) {
+            if (array[i] === int) {
+                return true;
+            }
+        }
+        return false;
+    }
+    const intArrayTostr = (array) => {
+        if (array) {
+            const tmp = array.map(a => { return String.fromCharCode(65 + a) });
+            return [].concat(tmp);
+        }
+    }
+    const getMax = (array) => {
+        let res = 0;
+        for (let i = 0; i < array.length; ++i) {
+            if (array[i] > res) {
+                res = array[i];
+            }
+        }
+        return res;
+    }
+    const parseAnswers = (str) => {
+        const res = [];
+        for (let i = 0; i < str.length; ++i) {
+            if (str.charCodeAt(i) >= 65 && str.charCodeAt(i) <= 70 && !intInArray(str.charCodeAt(i) - 65, res)) {
+                // console.log(str.charCodeAt(i));
+                res.push(str.charCodeAt(i) - 65);
+            }
+        }
+        return res;
+    }
     const updateQuestion = () => {
         const questionContent = document.getElementById('questionContent').value;
         const answer = document.getElementById('answer').value;
@@ -79,21 +112,25 @@ export default function QuizCardInEdit (quizInfo) {
                 alert('Invalid answer input format. Correct format example: A or A, B, C');
                 return false;
             }
-            quizInfo.info.questions[questionIndex].ans = answer;
+            if (getMax(parseAnswers(answer)) > quizInfo.info.questions[questionIndex].options.length - 1) {
+                alert('Invalid answer input, Please check if there are sufficient options');
+                return false;
+            }
+            quizInfo.info.questions[questionIndex].ans = parseAnswers(answer);
         }
         if (timeLimit) {
             if (!pattNum.test(timeLimit)) {
                 alert('time limit should be a postive integer');
                 return false;
             }
-            quizInfo.info.questions[questionIndex].time = timeLimit;
+            quizInfo.info.questions[questionIndex].time = parseInt(timeLimit);
         }
         if (point) {
             if (!pattNum.test(point)) {
                 alert('Points should be a postive integer');
                 return false;
             }
-            quizInfo.info.questions[questionIndex].point = point;
+            quizInfo.info.questions[questionIndex].point = parseInt(point);
         }
         const quizJSONString = JSON.stringify(quizInfo.info);
         // console.log(quizJSONString);
@@ -118,7 +155,7 @@ export default function QuizCardInEdit (quizInfo) {
             />
             <TextField
                 variant="standard"
-                label={quizInfo.info ? `Answer: ${quizInfo.info.questions[questionIndex].ans} (format: A or A,B)` : 'Answer: null, format: A or A,B' }
+                label={quizInfo.info ? `Answer: ${intArrayTostr(quizInfo.info.questions[questionIndex].ans)} (format: A or A,B)` : 'Answer: null, format: A or A,B' }
                 className={classes.bigInput}
                 id="answer"
                 item='true'
