@@ -247,7 +247,7 @@ export const GotQuestion = async (playerid) => {
         return data;
     } else {
         console.log(res);
-        alert('Failed');
+        // alert('Failed');
         // throw new Error('Log out failed');
     }
 }
@@ -261,6 +261,24 @@ export const PutAnswer = async (playerid, info) => {
         body: JSON.stringify({
             answerIds: info
         }),
+    });
+    const data = await res.json();
+    if (res.status === 200) {
+        console.log('yes');
+        return data;
+    } else {
+        console.log(res);
+        alert('Failed');
+        // throw new Error('Log out failed');
+    }
+}
+
+export const GotCorrectAnswer = async (playerid) => {
+    const res = await fetch(`${port}/play/${playerid}/answer`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
     });
     const data = await res.json();
     if (res.status === 200) {

@@ -14,9 +14,7 @@ export const quizQuestionPublicReturn = question => {
 */
 export const quizQuestionGetCorrectAnswers = question => {
   console.log('See question: ', question);
-  return [
-    question["ans"]
-  ]; // For a single answer
+  return question.ans; // For a single answer
 };
 
 /*
@@ -36,5 +34,6 @@ export const quizQuestionGetAnswers = question => {
  of the question once it starts. (Seconds)
 */
 export const quizQuestionGetDuration = question => {
-  return 10;
+  return question.time;
+  // return 10;
 };
