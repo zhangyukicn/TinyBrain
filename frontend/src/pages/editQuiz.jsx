@@ -124,7 +124,7 @@ export default function Editboard () {
     }
 
     React.useEffect(() => { fetchInfo(); }, []);
-    console.log(quizInfo);
+    // console.log(quizInfo);
     // console.log(quizId);
 
     const navLogOut = (event) => {
@@ -260,7 +260,7 @@ export default function Editboard () {
                     {/* Recent Orders */}
                     <Grid item xs={12}>
                     <Paper className={classes.paper}>
-                        <HistoryRecords />
+                        <HistoryRecords info={quizInfo}/>
                     </Paper>
                     </Grid>
                 </Grid>

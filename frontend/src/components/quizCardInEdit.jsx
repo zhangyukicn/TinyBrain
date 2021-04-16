@@ -41,7 +41,7 @@ export default function QuizCardInEdit (quizInfo) {
             history.push(`./${id}`);
         })
     }
-    console.log(quizInfo.info);
+    // console.log(quizInfo.info);
 
     const handleFiles = async (imgInput) => {
         const reader = new FileReader();
