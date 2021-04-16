@@ -126,9 +126,6 @@ export default function Playcontrol () {
         history.push(`/play/${sessionId}/result`);
     }
     const proceedSession = () => {
-        advanceSession(token, quizId);
-        alert('Proceed!');
-        fetchSessionInfo();
         console.log(`pos: ${sessionInfo.results.position}, length: ${sessionInfo.results.questions.length}`);
         if (sessionInfo.results.position === sessionInfo.results.questions.length - 1) {
             localStorage.setItem('active', 0);

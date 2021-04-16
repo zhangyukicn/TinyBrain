@@ -17,6 +17,9 @@ import * as CONFIG from '../config.json';
 import { useHistory, Redirect } from 'react-router-dom';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import { PlayerFetchSession } from '../api';
+import { DialogContentText } from '@material-ui/core';
+
+const dict = new Array(100);
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -80,7 +83,10 @@ function Playerdispay () {
                     res.json().then(res => {
                     // save token here
                     // console.log(res);
+                    dict[res.playerId] = Name;
+                    console.log(dict);
                     localStorage.setItem('playerid', res.playerId);
+                    // localStorage.setItem('playerid', res.playerId);
                     console.log(localStorage.getItem('playerid'));
                     history.push('./lobby');
                     })
