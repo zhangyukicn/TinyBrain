@@ -62,6 +62,16 @@
   text-align: center;
   margin-top: 20px;
 }
+.words-part{
+  background-color:white;
+  height: 100%;
+  width:50%;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-bottom: 20px; */
+  text-align: center;
+  margin-top: 20px;
+}
 .pic-part{
   /* background-color:red; */
   height: 50px;

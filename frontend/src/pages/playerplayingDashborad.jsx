@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import Copyright from '../components/copyRight';
 
+let flag = 1;
+
 const useStyles = makeStyles((theme) => ({
     icon: {
         marginRight: theme.spacing(2),
@@ -62,6 +64,8 @@ const useStyles = makeStyles((theme) => ({
 // 倒计时为0时，页面刷新去fetch新的question:
 
 function AnswerDispay () {
+    let answer;
+    let points = 0;
     const classes = useStyles();
     const history = useHistory();
     const playerid = localStorage.getItem('playerid');
@@ -75,24 +79,31 @@ function AnswerDispay () {
         });
     }
 
+    const GotQuestion = async (playerid) => {
+        const res = await fetch(`http://localhost:${CONFIG.BACKEND_PORT}/play/${playerid}/question`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const data = await res.json();
+        if (res.status === 200) {
+            return data;
+        } else {
+            console.log(res);
+            flag = 0;
+            history.push('./playerresult');
+            history.go(0);
+        }
+    }
+
     const fetchQuestion = () => {
         GotQuestion(playerid).then(
             result => {
                 console.log(result);
                 setInfo(result);
-                // history.go(0);
-                // const questiontitle = result.question.content;
-                // const image = result.question.img;
-                // document.getElementById('title_id').textContent = questiontitle;
             })
     }
-    // const fetchAnswer = () => {
-    //     GotCorrectAnswer(playerid).then(
-    //         result => {
-    //             console.log(result);
-    //             setAnsweInfo(result);
-    //         })
-    // }
 
     const idxToOption = (idx) => {
         return String.fromCharCode(65 + idx);
@@ -100,6 +111,17 @@ function AnswerDispay () {
 
     React.useEffect(() => { fetchQuestion(); }, []);
     // React.useEffect(() => { fetchAnswer(); }, []);
+
+    const RecordPoints = () => {
+        const resAnswer = [];
+        if (QuizInform.question) {
+            const res = QuizInform.question.point;
+            const resans = QuizInform.question.ans;
+            resAnswer.push({ res: resans, point: res });
+        }
+        console.log(resAnswer);
+        return resAnswer;
+    }
 
     const Clickfunction = (event) => {
         const checkbox = document.querySelectorAll("input[type='checkbox']");
@@ -113,57 +135,57 @@ function AnswerDispay () {
             }
         }
         console.log(feature);
-        // for (let i = 0; i < feature.length; i++) {
-        //   info = feature[i];
-        // }
-        PutAnswer(playerid, feature)
-            .then(result => {
-                // console.log('yes');
-                console.log(result);
-            })
-        // fetchQuestion();
-    }
-    const time = document.getElementById('time');
-    if (time !== null) {
-        console.log(time);
+        const result = fetch(`http://localhost:${CONFIG.BACKEND_PORT}/play/${playerid}/answer`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                answerIds: feature
+            }),
+        }).then(
+            result => {
+                if (result.status === 200) {
+                    console.log(result);
+                    const Points = RecordPoints();
+                    // console.log(Points[0].res);
+                    // console.log(feature);
+                    if (feature === Points[0].res) {
+                        console.log('yes');
+                        points = points + Points[0].point;
+                        console.log(points);
+                    }
+                    alert('Success');
+                } else if (result.status === 400) {
+                    alert('Time Out');
+                    history.go(0);
+                }
+            }
+        )
     }
 
-    // let time;
-    // let count;
-    // let answer;
-    // async function refreshPage () {
-    //         while (true) {
-    //             time = QuizInform ? (QuizInform.question.time) : null;
-    //             // answer = QuizAnsInform ? (QuizAnsInform.answerIds) : fetchAnswer();
-    //             if (time !== null) {
-    //                 count = parseInt(QuizInform.question.time * 1000);
-    //                 await wait(count);
-    //                 console.log(count);
-    //                 fetchQuestion();
-    //                 const res = await fetch(`http://localhost:${CONFIG.BACKEND_PORT}/play/${playerid}/question`, {
-    //                     method: 'GET',
-    //                     headers: {
-    //                         'Content-Type': 'application/json',
-    //                     },
-    //                 });
-    //                 const data = await res.json();
-    //                 if (res.status === 200) {
-    //                     setInfo(data);
-    //                 } else {
-    //                     console.log('yes');
-    //                     history.push('./playerresult');
-    //                     break;
-    //                 }
-    //             } else {
-    //                 await wait(1000);
-    //                 // history.go(0);
-    //                 // console.log('1');
-    //                 // continue;
-    //             }
-    //         }
-    //     }
+    let time;
+    let count;
+    async function refreshPage () {
+        while (true) {
+            time = QuizInform ? (QuizInform.question.time) : null;
+            if (time !== null) {
+                count = parseInt(QuizInform.question.time * 1000);
+                await wait(count);
+                // console.log(count);
+                fetchQuestion();
+                // console.log(flag);
+                if (flag === 0) {
+                    break;
+                }
+            } else {
+                await wait(1000);
+                fetchQuestion();
+            }
+        }
+    }
 
-    // refreshPage();
+    refreshPage();
 
     return (
         <div>
@@ -191,21 +213,6 @@ function AnswerDispay () {
                             <button className="pressbutton" onClick={Clickfunction}>
                                 Submit
                             </button>
-                            {/* <div>
-
-                                <div id="container">
-                                    {this.state.minute} : {this.state.second}
-                                </div>
-
-                                <button onClick={this.no}>
-                                    start
-                                </button>
-
-                                <button onClick={this.end}>
-                                    end
-                                 </button>
-
-                            </div> */}
                         </CardContent>
 
                     </Card>

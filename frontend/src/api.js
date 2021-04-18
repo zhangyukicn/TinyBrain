@@ -268,7 +268,7 @@ export const PutAnswer = async (playerid, info) => {
         return data;
     } else {
         console.log(res);
-        alert('Failed');
+        alert(res.statusText);
         // throw new Error('Log out failed');
     }
 }
@@ -285,7 +285,24 @@ export const GotCorrectAnswer = async (playerid) => {
         return data;
     } else {
         console.log(res);
-        alert('Failed');
+        alert(res);
+        // throw new Error('Log out failed');
+    }
+}
+
+export const GotSessionAnswer = async (playerid) => {
+    const res = await fetch(`${port}/play/${playerid}/results`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const data = await res.json();
+    if (res.status === 200) {
+        return data;
+    } else {
+        console.log(res);
+        alert(res);
         // throw new Error('Log out failed');
     }
 }
