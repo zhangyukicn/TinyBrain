@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 import Playnavbar from '../components/playernavbar';
 import { GotQuestion, PutAnswer, GotCorrectAnswer } from '../api';
@@ -68,28 +68,20 @@ export default function AnswerDispay (props) {
     // console.log('hello');
     const location = useLocation();
     const playerid = location.state.id;
-    let answer;
     let points = 0;
     const classes = useStyles();
     const history = useHistory();
     const emptyImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi8v42_qIIylFc_HQITxDN8AQAHnoFvxKnqg&usqp=CAU';
     const [QuizInform, setInfo] = React.useState(0);
-    const [AnsewerInform, setAnswerInfo] = React.useState(0);
+    const [AnsewerInform, setAnswerInfo] = React.useState('');
     const [isNewTime, setIsNewTime] = React.useState('');
+    const [isLoading, setLoaing] = useState(false);
 
     // 倒计时
-    const seconds = 0;
-    const rightAnswer = 0;
-    let timerID;
-    const [Correct, setAnswer] = React.useState({
-        rightAnswer: parseInt(0)
-    });
-
-    async function wait (ms) {
-        return new Promise(resolve => {
-            setTimeout(resolve, ms);
-        });
-    }
+    let timerID, questionID, AnswerID;
+    // const [Correct, setAnswer] = React.useState({
+    //     rightAnswer: parseInt(0)
+    // });
 
     const GotQuestion = async (playerid) => {
         const res = await fetch(`http://localhost:${CONFIG.BACKEND_PORT}/play/${playerid}/question`, {
@@ -109,62 +101,55 @@ export default function AnswerDispay (props) {
         }
     }
 
-    const [time, setTime] = React.useState({
-        seconds: parseInt(seconds)
-    });
+    const [time, setTime] = React.useState(0);
 
-    const fetchQuestion = () => {
-        GotQuestion(playerid).then(
-            result => {
-                if (result.question.isoTimeLastQuestionStarted !== isNewTime) {
-                    clearInterval(timerID);
-                    setInfo(result)
-                    setIsNewTime(result.question.isoTimeLastQuestionStarted);
-                }
+    const fetchQuestion = async () => {
+        const res = await GotQuestion(playerid)
+        if (typeof (res.question) !== 'undefined') {
+            if (res.question.isoTimeLastQuestionStarted !== isNewTime) {
+                clearInterval(questionID);
+                console.log(res);
+                clearInterval(timerID);
+                await setOver(false);
+                await setInfo(res);
+                await setIsNewTime(res.question.isoTimeLastQuestionStarted);
+                await setTime(res.question.time);
+                console.log('hello' + res.question.time)
+                await setLoaing(true);
+                // await setAnswerInfo(res.question.ans);
+                await fetchAnswer();
             }
-            )
-    }
-
-    const timesecond = () => {
-        if (QuizInform) {
-            if (QuizInform.question.time) {
-                console.log(QuizInform.question.time);
-                return setTime(QuizInform.question.time);
-            }
+        } else {
+            alert(res);
         }
     }
 
-    const fetchAnswer = () => {
-        GotCorrectAnswer(playerid).then(
-                result => {
-                    console.log(result);
-                    setAnswerInfo(result);
-                })
+    const fetchAnswer = async () => {
+        const res = await GotCorrectAnswer(playerid);
+        if (typeof (res) !== 'undefined') {
+            await setAnswerInfo(res.answerIds);
+            console.log(res.answerIds[0]);
+        } else {
+            alert(res);
         }
-    React.useEffect(() => { fetchAnswer(); }, []);
-
-    const correctanswershows = () => {
-        if (AnsewerInform) {
-            console.log(AnsewerInform);
-            return setAnswer(AnsewerInform.answerIds);
-            }
-        }
+    }
 
     const [over, setOver] = React.useState(false);
 
     const tick = () => {
         // 暂停，或已结束
         if (over) {
-            return setAnswer({
-                rightAnswer: Correct.rightAnswer
-            });
+            // return AnsewerInform;
+            return setAnswerInfo()
+            // return setAnswer({
+            //     rightAnswer: Correct.rightAnswer
+            // });
         }
-        if (time.seconds === 0) {
+        if (time === 0) {
             setOver(true);
         } else {
-            setTime({
-                seconds: time.seconds - 1
-            });
+            setTime(time - 1);
+            questionID = setInterval(() => fetchQuestion(), 1000);
         }
     };
 
@@ -173,12 +158,13 @@ export default function AnswerDispay (props) {
         timerID = setInterval(() => tick(), 1000);
         // 卸载组件时进行清理
         // return () => {};
-        return () => clearInterval(timerID);
+        return () => clearInterval(timerID, questionID);
     });
 
     // count down
 
     const idxToOption = (idx) => {
+        console.log(idx);
         return String.fromCharCode(65 + idx);
     }
 
@@ -232,48 +218,49 @@ export default function AnswerDispay (props) {
     }
 
     React.useEffect(() => {
-        // 执行定时
-        const AB = setInterval(() => fetchQuestion(), 1000);
-        // 卸载组件时进行清理
-        return () => clearInterval(AB);
-    });
+        fetchQuestion();
+        fetchAnswer();
+    }, []);
 
-    return (
-        <div>
-            <Playnavbar />
-            {/* <Countdown /> */}
-            <Grid container spacing={0}>
-                <Grid item xs >
-                    <Card className={classes.heroContent}>
-                        <CardContent className={classes.cardContent}>
-                            <CardMedia
-                                className={classes.cardMedia}
-                                image={QuizInform ? (QuizInform.question.img ? QuizInform.question.img : emptyImg) : emptyImg}
-                            />
-                            <div id='time'>
-                                {QuizInform ? (QuizInform.question.time ? `Total Time ${QuizInform.question.time}` : null) : null}
-                            </div>
-                            <p>{`Time Left: ${time.seconds}s`}</p>
-                            <div>{over ? `"Time's up!" and the answer is ${idxToOption(Correct.rightAnswer)} ` : ''}</div>
-                            <div className="title-part">
-                                <Typography gutterBottom variant="h4" component="h2">
-                                    {QuizInform ? (QuizInform.question.content ? `Question ${QuizInform.question.id}: ${QuizInform.question.content}` : `${QuizInform.question.content}`) : null}
-                                </Typography>
-                            </div>
-                            <div>
-                                {/* {QuizInform ? (QuizInform.question.options ? 'True' : 'False') : null} */}
-                                {QuizInform ? (QuizInform.question.options ? (QuizInform.question.options.map((option, index) => (<div key={index} className='pic-part'> <label>{`${idxToOption(index)}: ${option.txt}`}<input id={index} type="checkbox" value={`${idxToOption(index)}: ${option.txt}`} /></label></div>))) : null) : null}
-                            </div>
-                            <button className="pressbutton" onClick={Clickfunction}>
-                                Submit
-                            </button>
-                        </CardContent>
+    if (!isLoading) {
+        return null
+    } else {
+        return (
+            <div>
+                <Playnavbar />
+                {/* <Countdown /> */}
+                <Grid container spacing={0}>
+                    <Grid item xs >
+                        <Card className={classes.heroContent}>
+                            <CardContent className={classes.cardContent}>
+                                <CardMedia
+                                    className={classes.cardMedia}
+                                    image={QuizInform ? (QuizInform.question.img ? QuizInform.question.img : emptyImg) : emptyImg}
+                                />
+                                <div id='time'>
+                                    {QuizInform ? (QuizInform.question.time ? `Total Time ${QuizInform.question.time}` : null) : null}
+                                </div>
+                                <p>{`Time Left: ${time}s`}</p>
+                                <div>{over ? `"Time's up!" and the answer is ${idxToOption(AnsewerInform)} ` : ''}</div>
+                                <div className="title-part">
+                                    <Typography gutterBottom variant="h4" component="h2">
+                                        {QuizInform ? (QuizInform.question.content ? `Question ${QuizInform.question.id}: ${QuizInform.question.content}` : `${QuizInform.question.content}`) : null}
+                                    </Typography>
+                                </div>
+                                <div>
+                                    {QuizInform ? (QuizInform.question.options ? (QuizInform.question.options.map((option, index) => (<div key={index} className='pic-part'> <label>{`${idxToOption(index)}: ${option.txt}`}<input id={index} type="checkbox" value={`${idxToOption(index)}: ${option.txt}`} /></label></div>))) : null) : null}
+                                </div>
+                                <button className="pressbutton" onClick={Clickfunction}>
+                                    Submit
+                                </button>
+                            </CardContent>
 
-                    </Card>
+                        </Card>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Copyright />
+                <Copyright />
 
-        </div>
-    );
+            </div>
+        );
+    }
 }
