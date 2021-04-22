@@ -285,7 +285,7 @@ export const GotCorrectAnswer = async (playerid) => {
         return data;
     } else {
         console.log(res);
-        alert(res);
+        // alert(res);
         // throw new Error('Log out failed');
     }
 }

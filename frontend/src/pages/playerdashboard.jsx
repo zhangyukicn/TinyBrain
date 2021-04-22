@@ -19,6 +19,8 @@ import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import { PlayerFetchSession } from '../api';
 import { DialogContentText } from '@material-ui/core';
 
+import LobbyDispay from './lobby';
+
 const dict = new Array(100);
 
 const useStyles = makeStyles((theme) => ({
@@ -81,14 +83,8 @@ function Playerdispay () {
             fetch(`http://localhost:${CONFIG.BACKEND_PORT}/play/join/${Gamepin}`, para).then(res => {
                 if (res.status === 200) {
                     res.json().then(res => {
-                    // save token here
-                    // console.log(res);
-                    dict[res.playerId] = Name;
-                    console.log(dict);
-                    localStorage.setItem('playerid', res.playerId);
-                    // localStorage.setItem('playerid', res.playerId);
-                    console.log(localStorage.getItem('playerid'));
-                    history.push('./lobby');
+                    console.log(res.playerId);
+                    history.push({ pathname: './lobby', state: { id: res.playerId } });
                     })
                 } else {
                     res.json().then(res => {

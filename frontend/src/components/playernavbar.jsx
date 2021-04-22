@@ -24,11 +24,8 @@ export default function ButtonAppBar () {
     const classes = useStyles();
     const history = useHistory();
 
-    const token = localStorage.getItem('token');
-
     const navBack = (event) => {
         event.preventDefault();
-        localStorage.removeItem('playerid');
         history.push('./');
     }
 

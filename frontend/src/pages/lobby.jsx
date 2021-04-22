@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import * as CONFIG from '../config.json';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory, Redirect, useLocation } from 'react-router-dom';
 import '../App.css';
 import Playnavbar from '../components/playernavbar';
+import AnswerDispay from './playerplayingDashborad'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,9 +19,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LobbyDispay () {
+export default function LobbyDispay (props) {
   const history = useHistory();
-  const playerid = localStorage.getItem('playerid');
+  const location = useLocation();
+  const playerid = location.state.id;
 
   async function wait (ms) {
     return new Promise(resolve => {
@@ -42,7 +44,7 @@ function LobbyDispay () {
         // console.log('yes');
         const data = await result.json();
         if (data.started === true) {
-          history.push('./playing');
+          history.push({ pathname: './playing', state: { id: playerid } });
           break;
         }
       }
@@ -61,4 +63,4 @@ return (
 );
 }
 
-export default LobbyDispay;
+// export default LobbyDispay;

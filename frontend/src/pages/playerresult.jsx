@@ -4,7 +4,7 @@ import Playnavbar from '../components/playernavbar';
 import { GotSessionAnswer, PutAnswer, GotCorrectAnswer } from '../api';
 import { makeStyles } from '@material-ui/core/styles';
 import * as CONFIG from '../config.json';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory, Redirect, useLocation } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -59,9 +59,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function AnswerDispay () {
+function AnswerDispay (props) {
+    const location = useLocation();
     const classes = useStyles();
-    const playerid = localStorage.getItem('playerid');
+    const playerid = location.state.id;
     const [SessionInformResult, setInfo] = React.useState(0);
 
     const fetchSessionAnswer = () => {
@@ -88,17 +89,6 @@ function AnswerDispay () {
         return res;
     }
 
-    const getFinalAnswer = () => {
-        const res = getResEachQuestion();
-        let count = 0;
-        for (let i = 0; i < res.length; ++i) {
-            if (res[i].correct === 1) {
-            count = count + 1;
-            }
-        }
-        return count;
-    }
-
     return (
         <div>
             <Playnavbar />
@@ -113,7 +103,6 @@ function AnswerDispay () {
                             </div>
                             <div className="words-part">
                             <Typography gutterBottom variant="h5" component="h2">
-                            {`Your results are:  \n${getFinalAnswer()} points`}
                              </Typography>
                             {getResEachQuestion().map((q, index) =>
                                 (<Typography gutterBottom key={index} variant="h5" component="h2">
