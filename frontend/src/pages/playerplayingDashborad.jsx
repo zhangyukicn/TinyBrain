@@ -78,7 +78,7 @@ export default function AnswerDispay (props) {
     const [isLoading, setLoaing] = useState(false);
 
     // 倒计时
-    let timerID, questionID, AnswerID;
+    let timerID, questionID, AnsewerId;
     // const [Correct, setAnswer] = React.useState({
     //     rightAnswer: parseInt(0)
     // });
@@ -116,8 +116,6 @@ export default function AnswerDispay (props) {
                 await setTime(res.question.time);
                 console.log('hello' + res.question.time)
                 await setLoaing(true);
-                // await setAnswerInfo(res.question.ans);
-                await fetchAnswer();
             }
         } else {
             alert(res);
@@ -128,7 +126,7 @@ export default function AnswerDispay (props) {
         const res = await GotCorrectAnswer(playerid);
         if (typeof (res) !== 'undefined') {
             await setAnswerInfo(res.answerIds);
-            console.log(res.answerIds[0]);
+            console.log(res.answerIds);
         } else {
             alert(res);
         }
@@ -139,14 +137,11 @@ export default function AnswerDispay (props) {
     const tick = () => {
         // 暂停，或已结束
         if (over) {
-            // return AnsewerInform;
-            return setAnswerInfo()
-            // return setAnswer({
-            //     rightAnswer: Correct.rightAnswer
-            // });
+            return AnsewerInform;
         }
         if (time === 0) {
             setOver(true);
+            fetchAnswer();
         } else {
             setTime(time - 1);
             questionID = setInterval(() => fetchQuestion(), 1000);
@@ -164,8 +159,16 @@ export default function AnswerDispay (props) {
     // count down
 
     const idxToOption = (idx) => {
-        console.log(idx);
+        // console.log(idx);
         return String.fromCharCode(65 + idx);
+    }
+
+    const showACII = (lis) => {
+        const number = []
+        for (let i = 0; i < lis.length; i++) {
+            number.push(idxToOption(lis[i]));
+        }
+        return number;
     }
 
     const RecordPoints = () => {
@@ -219,7 +222,6 @@ export default function AnswerDispay (props) {
 
     React.useEffect(() => {
         fetchQuestion();
-        fetchAnswer();
     }, []);
 
     if (!isLoading) {
@@ -233,22 +235,27 @@ export default function AnswerDispay (props) {
                     <Grid item xs >
                         <Card className={classes.heroContent}>
                             <CardContent className={classes.cardContent}>
+                                {/* <div id='time'> */}
+                                    {QuizInform ? (QuizInform.question.time ? `Total Time ${QuizInform.question.time}s` : null) : null}
+                                {/* </div> */}
+                                <p>{`Time Left: ${time}s`}</p>
+                                <div>{over ? `"Time's up!" and the answer is ${showACII(AnsewerInform)} ` : ''}</div>
                                 <CardMedia
                                     className={classes.cardMedia}
                                     image={QuizInform ? (QuizInform.question.img ? QuizInform.question.img : emptyImg) : emptyImg}
                                 />
-                                <div id='time'>
-                                    {QuizInform ? (QuizInform.question.time ? `Total Time ${QuizInform.question.time}` : null) : null}
-                                </div>
-                                <p>{`Time Left: ${time}s`}</p>
-                                <div>{over ? `"Time's up!" and the answer is ${idxToOption(AnsewerInform)} ` : ''}</div>
                                 <div className="title-part">
                                     <Typography gutterBottom variant="h4" component="h2">
                                         {QuizInform ? (QuizInform.question.content ? `Question ${QuizInform.question.id}: ${QuizInform.question.content}` : `${QuizInform.question.content}`) : null}
                                     </Typography>
+                                    <Typography gutterBottom variant="h6" component="h2">
+                                        {QuizInform ? (QuizInform.question.ans ? (QuizInform.question.ans.length > 1 ? 'multiple choice' : 'single choice') : null) : null}
+                                    </Typography>
                                 </div>
                                 <div>
+                                <Typography gutterBottom variant="h4" component="h2">
                                     {QuizInform ? (QuizInform.question.options ? (QuizInform.question.options.map((option, index) => (<div key={index} className='pic-part'> <label>{`${idxToOption(index)}: ${option.txt}`}<input id={index} type="checkbox" value={`${idxToOption(index)}: ${option.txt}`} /></label></div>))) : null) : null}
+                                    </Typography>
                                 </div>
                                 <button className="pressbutton" onClick={Clickfunction}>
                                     Submit
