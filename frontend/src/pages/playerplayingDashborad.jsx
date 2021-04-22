@@ -77,7 +77,7 @@ export default function AnswerDispay (props) {
     const [isLoading, setLoaing] = useState(false);
     const [myPoint, setPoint] = useState(0);
     const [Quizanswer, setQuizAnswerInfo] = React.useState('');
-    const [Submitanswer, setSubmitAnswerInfo] = React.useState('');
+    const [Submitanswer, setSubmitAnswerInfo] = React.useState(0);
 
     // 倒计时
     let timerID, questionID, AnsewerId;
@@ -216,7 +216,7 @@ export default function AnswerDispay (props) {
                     alert('Success');
                     if (equar(feature, Quizanswer)) {
                         Point = Point + myPoint;
-                        setSubmitAnswerInfo(Point + myPoint);
+                        setSubmitAnswerInfo(Submitanswer + myPoint);
                     }
                 } else if (result.status === 400) {
                     alert('Time Out');
