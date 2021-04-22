@@ -187,6 +187,7 @@ export default function Playcontrol () {
                                 className={classes.cardMedia}
                                 image={sessionInfo ? (sessionInfo.results.position === -1 ? emptyImg : (sessionInfo.results.questions[sessionInfo.results.position].img ? sessionInfo.results.questions[sessionInfo.results.position].img : emptyImg)) : emptyImg}
                             />
+                            {sessionInfo ? (sessionInfo.results.position === -1 ? null : (<Typography gutterBottom variant="h5" component="h2">{`Question ${sessionInfo.results.position + 1}: ${sessionInfo.results.questions[sessionInfo.results.position].content}`}</Typography>)) : null}
                             {sessionInfo
                             ? (sessionInfo.results.position === -1
                                 ? (<Typography gutterBottom variant="h5" component="h2">

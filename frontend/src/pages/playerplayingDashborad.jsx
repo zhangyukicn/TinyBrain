@@ -68,7 +68,6 @@ export default function AnswerDispay (props) {
     // console.log('hello');
     const location = useLocation();
     const playerid = location.state.id;
-    let points = 0;
     const classes = useStyles();
     const history = useHistory();
     const emptyImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi8v42_qIIylFc_HQITxDN8AQAHnoFvxKnqg&usqp=CAU';
@@ -76,9 +75,13 @@ export default function AnswerDispay (props) {
     const [AnsewerInform, setAnswerInfo] = React.useState('');
     const [isNewTime, setIsNewTime] = React.useState('');
     const [isLoading, setLoaing] = useState(false);
+    const [myPoint, setPoint] = useState(0);
+    const [Quizanswer, setQuizAnswerInfo] = React.useState('');
+    const [Submitanswer, setSubmitAnswerInfo] = React.useState('');
 
     // 倒计时
     let timerID, questionID, AnsewerId;
+    let Point = 0;
     // const [Correct, setAnswer] = React.useState({
     //     rightAnswer: parseInt(0)
     // });
@@ -96,7 +99,7 @@ export default function AnswerDispay (props) {
         } else {
             console.log(res);
             flag = 0;
-            history.push({ pathname: './playerresult', state: { id: playerid } });
+            history.push({ pathname: './playerresult', state: { id: playerid, point: Submitanswer } });
             history.go(0);
         }
     }
@@ -114,8 +117,10 @@ export default function AnswerDispay (props) {
                 await setInfo(res);
                 await setIsNewTime(res.question.isoTimeLastQuestionStarted);
                 await setTime(res.question.time);
-                console.log('hello' + res.question.time)
+                console.log('hello' + res.question.time);
                 await setLoaing(true);
+                await setPoint(res.question.point);
+                await setQuizAnswerInfo(res.question.ans);
             }
         } else {
             alert(res);
@@ -171,15 +176,19 @@ export default function AnswerDispay (props) {
         return number;
     }
 
-    const RecordPoints = () => {
-        const resAnswer = [];
-        if (QuizInform.question) {
-            const res = QuizInform.question.point;
-            const resans = QuizInform.question.ans;
-            resAnswer.push({ res: resans, point: res });
+    const equar = (a, b) => {
+        // 判断数组的长度
+        if (a.length !== b.length) {
+            return false
+        } else {
+            // 循环遍历数组的值进行比较
+            for (let i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) {
+                    return false
+                }
+            }
+            return true;
         }
-        console.log(resAnswer);
-        return resAnswer;
     }
 
     const Clickfunction = (event) => {
@@ -202,16 +211,13 @@ export default function AnswerDispay (props) {
         }).then(
             result => {
                 if (result.status === 200) {
-                    console.log(result);
-                    const Points = RecordPoints();
-                    // console.log(Points[0].res);
-                    // console.log(feature);
-                    if (feature === Points[0].res) {
-                        console.log('yes');
-                        points = points + Points[0].point;
-                        console.log(points);
-                    }
+                    console.log(feature);
+                    console.log(Quizanswer);
                     alert('Success');
+                    if (equar(feature, Quizanswer)) {
+                        Point = Point + myPoint;
+                        setSubmitAnswerInfo(Point + myPoint);
+                    }
                 } else if (result.status === 400) {
                     alert('Time Out');
                     history.go(0);

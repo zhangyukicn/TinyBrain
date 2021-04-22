@@ -5,7 +5,7 @@ context('Signup flow - happy path', () => {
     });
     it('Sucessfully signs up', () => {
         const name = 'Jane';
-        const email = 'ssdsfsfes@gamil.com';
+        const email = 'ssdses@gamil.com';
         const passwords = 'zzzzzzzz';
         const SessionName = 'sample1';
         const Questionname = 'Is the earth round or flat?'

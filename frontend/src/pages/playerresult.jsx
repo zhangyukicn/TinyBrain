@@ -63,6 +63,7 @@ function AnswerDispay (props) {
     const location = useLocation();
     const classes = useStyles();
     const playerid = location.state.id;
+    const points = location.state.point;
     const [SessionInformResult, setInfo] = React.useState(0);
 
     const fetchSessionAnswer = () => {
@@ -100,6 +101,9 @@ function AnswerDispay (props) {
                                 <Typography gutterBottom variant="h4" component="h2">
                                     Congradulation! You finish the game!
                              </Typography>
+                             {/* <Typography gutterBottom variant="h4" component="h2">
+                                    {`Your Points are ${points}`}
+                             </Typography> */}
                             </div>
                             <div className="words-part">
                             <Typography gutterBottom variant="h5" component="h2">
