@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { getDefaultNormalizer, render, screen } from '@testing-library/react';
 import { configure, EnzymeAdapter, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Lobby from './lobby';
@@ -10,6 +10,12 @@ describe('SignUp', () => {
     const noop = () => { };
 
     const modalStarta = shallow(<Signup />);
+
+    const props = {
+      username: 'Yuki',
+      passwords: 'yyyyyyyyyy',
+      mail: 'zzdfhjkdjfh@gmail.com'
+    }
 
     it('is matched with snapshot', () => {
       expect(modalStarta).toMatchSnapshot();
