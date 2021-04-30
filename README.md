@@ -1,11 +1,11 @@
 # ReactJS: BigBrain
 
-0. Background & Motivation
-1. The Task (Frontend)
-2. The Support (Backend)
-3. Constraints & Assumptions
+1. Background & Motivation
+2. The Task (Frontend)
+3. The Support (Backend)
+4. Constraints & Assumptions
 
-## 0. Background & Motivation
+## 1. Background & Motivation
 
 In March 2021 you and your friends pitched a startup idea to produce *An innovative lightweight quiz platform for millenials* that will *revolutionise the secondary and tertiary education market for years*. You pitched this solution in the form of a web-based application, and called this quiz application **BigBrain**.
 
@@ -19,7 +19,7 @@ Because your MVP is only going to be demonstrated once, your team considers it i
 
 To satisfy modern tastes and expectations you have also decided to ensure that the UI/UX and Accessibility standards are very high.
 
-## 1. The Front-end
+## 2. The Front-end
 
 Navigate to the `frontend` folder and run `yarn install` to install all of the dependencies necessary to run the ReactJS app. Then run `yarn start` to start the ReactJS app.
 
