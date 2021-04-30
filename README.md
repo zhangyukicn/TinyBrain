@@ -1,14 +1,9 @@
 # ReactJS: BigBrain
 
-1. Background & Motivation
-2. The Task (Frontend)
-3. The Support (Backend)
-4. Constraints & Assumptions
-5. Teamwork
-6. Marking Criteria
-7. Originality of Work
-8. Submission
-9. Late Submission Policy
+0. Background & Motivation
+1. The Task (Frontend)
+2. The Support (Backend)
+3. Constraints & Assumptions
 
 ## 0. Background & Motivation
 
